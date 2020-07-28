@@ -2,7 +2,7 @@ const userService = require("../services/services");
 const token = require("../middleware/token");
 const mailer = require("../middleware/sendMail");
 
-exports.register = (req, res) => {
+module.exports.register = (req, res) => {
   try {
     req
       .checkBody("firstName", "firstname not valid ")
@@ -12,9 +12,9 @@ exports.register = (req, res) => {
       .checkBody("lastName", "lastname not valid")
       .isLength({ min: 2 })
       .isAlpha();
-    req.checkBody("email", "email is not valid").isEmail();
+    req.checkBody("email", "Enter a valid email").isEmail();
     req.checkBody("role", "role not valid").isLength({ min: 2 }).isAlpha();
-    req.checkBody("password", "password not valid").isLength({ min: 8 });
+    req.checkBody("password", "Enter a valid password").isLength({ min: 8 });
     req
       .checkBody("confirmpassword", "passwords do not match")
       .equals(req.body.password);
@@ -42,7 +42,7 @@ exports.register = (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+module.exports.login = (req, res) => {
   try {
     console.log("request in controller ", req.body);
     req.checkBody("role", "role is not valid").isAlpha();
@@ -79,7 +79,7 @@ exports.login = (req, res) => {
   }
 };
 
-exports.forgotPassword = (req, res) => {
+module.exports.forgotPassword = (req, res) => {
   try {
     userService.forgotPassword(req.body, (err, data) => {
       var responses = {};
@@ -108,7 +108,7 @@ exports.forgotPassword = (req, res) => {
   }
 };
 
-exports.resetPassword = (req, res) => {
+module.exports.resetPassword = (req, res) => {
   try {
     req.checkBody("password", "password not vaild").len(8, 13);
     req.checkBody("confirmpassword", "set vaild password").len(8, 13);
@@ -136,33 +136,5 @@ exports.resetPassword = (req, res) => {
     }
   } catch (err) {
     console.log(err);
-  }
-};
-
-exports.owner = (req, res) => {
-  try {
-    req.checkBody("parkinglots", "parking lots input not valid").isNumeric();
-    var error = req.validationErrors();
-    var response = {};
-
-    if (error) {
-      response.data = error;
-      response.sucess = false;
-      res.status(422).send(response);
-    } else {
-      userService.createParkingLot(req.body, (err, data) => {
-        if (err) {
-          response.data = err;
-          response.sucess = false;
-          res.status(500).send(response);
-        } else {
-          response.data = data;
-          response.success = true;
-          res.status(200).send(response);
-        }
-      });
-    }
-  } catch (err) {
-    console.log("error in register controller", err);
   }
 };
