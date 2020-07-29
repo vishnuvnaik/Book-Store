@@ -1,11 +1,9 @@
-const userService = require("../services/services");
+const userService = require("../services/userServices");
 const token = require("../middleware/token");
 const mailer = require("../middleware/sendMail");
 
 module.exports.register = (req, res) => {
   try {
-    let a = 2;
-    b = a + b;
     req
       .checkBody("firstName", "firstname not valid ")
       .isLength({ min: 2 })
@@ -117,7 +115,6 @@ module.exports.forgotPassword = (req, res) => {
         responses.success = true;
         responses.result = data;
         responses.message = "Forgot link";
-        console.log("data in controller ==> " + responses.message);
         const payload = {
           user_email: req.body.email,
         };
