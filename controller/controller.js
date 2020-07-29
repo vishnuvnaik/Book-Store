@@ -4,6 +4,8 @@ const mailer = require("../middleware/sendMail");
 
 module.exports.register = (req, res) => {
   try {
+    let a = 2;
+    b = a + b;
     req
       .checkBody("firstName", "firstname not valid ")
       .isLength({ min: 2 })
@@ -42,12 +44,12 @@ module.exports.register = (req, res) => {
   }
 };
 
-module.exports.login = (req, res) => {
+module.exports.update = (req, res) => {
   try {
     console.log("request in controller ", req.body);
-    req.checkBody("role", "role is not valid").isAlpha();
+    req.checkBody("firstName", "firstname is not valid").isAlpha();
     req.checkBody("email", "email id is not valid ").isEmail();
-    req.checkBody("password", "password is not valid ").isLength({ min: 8 });
+    req.checkBody("lastName", "lastname is not valid ").isAlpha();
     var error = req.validationErrors();
     var response = {};
     if (error) {
@@ -55,16 +57,42 @@ module.exports.login = (req, res) => {
       response.error = error;
       return res.status(422).send(response);
     }
-    userService.login(req.body, (err, data) => {
+    userService.update(req.body, (err, data) => {
       if (err) {
         response.success = false;
         response.error = error;
         return res.status(422).send(response);
       } else {
         response.data = data;
+        response.success = true;
+        res.status(200).send(response);
+      }
+    });
+  } catch (err) {
+    console.log("error in login controller", err);
+  }
+};
+module.exports.login = (req, res) => {
+  try {
+    console.log("request in controller ", req.body);
+    req.checkBody("email", "email id is not valid ").isEmail();
+    req.checkBody("password", "password is not valid ").isLength({ min: 8 });
+    var error = req.validationErrors();
+    var response = {};
+    if (error) {
+      response.success = false;
+      response.error = "email or password not valid";
+      return res.status(422).send(response);
+    }
+    userService.login(req.body, (err, data) => {
+      if (err) {
+        response.success = false;
+        response.error = "email or password not valid";
+        return res.status(422).send(response);
+      } else {
+        response.data = data;
         var payload = {
           email: data[0].email,
-          role: data[0].role,
           password: data[0].password,
         };
         let code = token.GenerateToken(payload); //generates token for authentication
@@ -96,8 +124,6 @@ module.exports.forgotPassword = (req, res) => {
 
         const code = token.GenerateToken(payload);
         const url = `http://localhost:5000/resetPassword/${code.token}`;
-        console.log(code);
-        console.log(req.body.email);
         mailer.sendMail(url, req.body.email);
         responses.success = true;
         res.status(200).send(url);

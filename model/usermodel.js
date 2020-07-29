@@ -8,7 +8,12 @@ var registrationSchema = new mongoSchema(
     lastName: { type: String, required: [true, "last name is required"] },
     email: { type: String, required: [true, "email is required"] },
     password: { type: String, required: [true, "password is required"] },
-    role: { type: String, required: true, enum: ["user", "admin"] },
+    role: {
+      type: String,
+      required: true,
+      default: "user",
+      enum: ["user", "admin"],
+    },
   },
   {
     timestamps: true,
@@ -54,6 +59,27 @@ usermodel.prototype.register = (body, callback) => {
     }
   });
 };
+usermodel.prototype.update = (body, callback) => {
+  user.find({ email: body.email }, (err, data) => {
+    if (err) {
+      return callback(err);
+    } else if (data.length > 0) {
+      const newUser = new user({
+        firstName: body.firstName,
+        lastName: body.lastName,
+      });
+      newUser.save((err, result) => {
+        if (err) {
+          console.log("error in model file", err);
+          return callback(err);
+        } else {
+          console.log("data save successfully", result);
+          return callback(null, result);
+        }
+      });
+    }
+  });
+};
 usermodel.prototype.login = (body, callback) => {
   //The find() method with parameters returns the requested documents from a collection and
   //returns requested fields for the documents. Email of user is requested.
@@ -65,8 +91,6 @@ usermodel.prototype.login = (body, callback) => {
         if (err) {
           return callback(err);
         } else if (res) {
-          //console.log(data);
-
           return callback(null, data);
         } else {
           return callback(
@@ -83,13 +107,7 @@ usermodel.prototype.forgotPassword = (body, callback) => {
   // console.log("body in model==>",body);
 
   user.find({ email: body.email }, (err, data) => {
-    if (err) {
-      return callback(err);
-    } else if (data) {
-      console.log("data in models==>", data[0]._id);
-
-      //console.log(data)
-
+    if (data.length > 0) {
       return callback(null, data);
     } else {
       return callback("Invalid User ");
@@ -100,7 +118,6 @@ usermodel.prototype.resetPassword = (req, callback) => {
   //console.log("request------>", req.body);
   let newpassword = bcrypt.hashSync(req.body.password, 10);
   console.log("new password bcrypt --->", newpassword);
-
   // updateOne() Updates a single document within the collection based on the filter.
   user.updateOne(
     { _id: req.decoded.payload.user_id },

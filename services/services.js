@@ -19,6 +19,15 @@ exports.login = (req, callback) => {
     }
   });
 };
+exports.update = (req, callback) => {
+  model.update(req, (err, data) => {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, data);
+    }
+  });
+};
 
 exports.forgotPassword = (req, callback) => {
   model.forgotPassword(req, (err, data) => {
