@@ -77,19 +77,27 @@ exports.forgotPassword = (req, callback) => {
 };
 
 exports.resetPassword = (req, callback) => {
-  bcrypt.hash(req.body.confirmpassword, 10, (err, data) => {
-    model.updateOne(
-      { email: req.body.email },
-      {
-        password: data,
-      },
-      (err, data) => {
-        if (data) {
-          callback(null, data);
-        } else {
-          callback("error");
-        }
+  try {
+    bcrypt.hash(req.body.password, 7, (err, encrypted) => {
+      if (err) {
+        callback(err);
+      } else {
+        model.update(
+          req,
+          {
+            password: encrypted,
+          },
+          (err, data) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback(null, data);
+            }
+          }
+        );
       }
-    );
-  });
+    });
+  } catch (err) {
+    callback(err);
+  }
 };

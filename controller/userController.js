@@ -104,8 +104,9 @@ module.exports.forgotPassword = (req, res) => {
 
 module.exports.resetPassword = (req, res) => {
   try {
-    req.checkBody("password", "password not vaild").len(8, 13);
-    req.checkBody("confirmpassword", "set vaild password").len(8, 13);
+    console.log(req.body);
+    req.checkBody("password", "password not vaild").isLength({ min: 8 });
+    req.checkBody("confirmpassword", "set vaild password").isLength({ min: 8 });
 
     var error = req.validationErrors();
     var response = {};
