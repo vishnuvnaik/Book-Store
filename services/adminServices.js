@@ -16,15 +16,23 @@ exports.addBooks = (req, callback) => {
     return callback(err);
   }
 };
-exports.getAllBooksService = (data, callBack) => {
+exports.getAllBooksService = (req, callBack) => {
   try {
-    bookModel.getBooks(data, (err, result) => {
-      if (err) {
-        return callBack(err);
-      } else {
-        return callBack(null, result);
-      }
+    return new Promise((resolve, reject) => {
+      bookModel
+        .getBooks(req)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => reject(err));
     });
+    // bookModel.getBooks(data, (err, result) => {
+    //   if (err) {
+    //     return callBack(err);
+    //   } else {
+    //     return callBack(null, result);
+    //   }
+    // });
   } catch (err) {
     return callBack(err);
   }
