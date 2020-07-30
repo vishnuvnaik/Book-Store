@@ -44,7 +44,6 @@ module.exports.register = (req, res) => {
 
 module.exports.login = (req, res) => {
   try {
-    console.log("request in controller ", req.body);
     req.checkBody("email", "email id is not valid ").isEmail();
     req.checkBody("password", "password is not valid ").isLength({ min: 8 });
     var error = req.validationErrors();
