@@ -21,26 +21,15 @@ var registrationSchema = new mongoSchema(
 );
 function usermodel() {}
 var user = mongoose.model("user", registrationSchema);
-// function hash(password) {
-//   var salt = bcrypt.genSaltSync(10);
-//   var hashPassword = bcrypt.hashSync(password, salt);
-//   return hashPassword;
-// }
-
 usermodel.prototype.finduser = (body, callback) => {
-  try {
-    console.log(body.email);
-    user.find({ email: body.email }, (err, data) => {
-      if (err) {
-        console.log("Error in register user schema ");
-        return callback(err);
-      } else {
-        return callback(null, data);
-      }
-    });
-  } catch (err) {
-    return callback(err);
-  }
+  user.find({ email: body.email }, (err, data) => {
+    if (err) {
+      console.log("Error in register user schema ");
+      return callback(err);
+    } else {
+      return callback(null, data);
+    }
+  });
 };
 
 usermodel.prototype.createUser = (body, callback) => {
