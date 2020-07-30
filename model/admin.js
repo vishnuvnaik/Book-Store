@@ -17,18 +17,22 @@ var Books = mongoose.model("Books", adminSchema);
 
 function bookModel() {}
 
-bookModel.prototype.addBooks = (req, callback) => {
-  let bookAdd = new Books(req);
-  bookAdd.save((err, data) => {
-    if (err) {
-      return callback({ message: "Failed to add book!", error: err });
-    } else {
-      return callback(null, {
-        message: "Book Added Successfully!",
-        result: data,
-      });
-    }
-  });
+bookModel.prototype.addBooks = (req) => {
+  try {
+    return new Promise((resolve, reject) => {
+      let bookAdd = new Books(req);
+      bookAdd
+        .save()
+        .then((result) => {
+          resolve({ data: result });
+        })
+        .catch((err) => {
+          reject({ error: err });
+        });
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 bookModel.prototype.getBooks = (field, callback) => {
   try {
