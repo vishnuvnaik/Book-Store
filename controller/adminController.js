@@ -42,25 +42,6 @@ module.exports.addBookController = (req, res) => {
             res.status(500).send({ data: response });
           });
       });
-      // let filterData = {
-      //   authorName: req.body.authorName,
-      //   title: req.body.title,
-      //   quantity: req.body.quantity,
-      //   price: req.body.price,
-      //   description: req.body.description,
-      //   bookName: req.body.bookName,
-      // };
-      // adminServices.addBooks(filterData, (err, data) => {
-      //   if (err) {
-      //     response.status = false;
-      //     response.error = err;
-      //     return res.status(404).send(response);
-      //   } else {
-      //     response.status = true;
-      //     response.message = data;
-      //     return res.status(200).send(response);
-      //   }
-      // });
     }
   } catch (err) {
     response.status = false;
