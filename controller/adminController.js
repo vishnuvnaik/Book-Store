@@ -1,4 +1,5 @@
 const adminServices = require("../services/adminServices");
+const admin = require("../model/admin");
 
 module.exports.addBookController = (req, res) => {
   let response = {};
@@ -17,6 +18,7 @@ module.exports.addBookController = (req, res) => {
       return res.status(422).send(response);
     } else {
       let filterData = {
+        user_id: req.decoded.payload.email,
         authorName: req.body.authorName,
         title: req.body.title,
         quantity: req.body.quantity,
@@ -50,23 +52,29 @@ module.exports.addBookController = (req, res) => {
   }
 };
 module.exports.getBooks = (req, res) => {
-  let find = {};
-  let response = {
-    success: false,
-    message: "Error while displaying all books",
-    data: {},
+  var id = {
+    userId: req.decoded.payload.email,
   };
+
+  let response = {};
   try {
-    service.getAllBooksService(find, (err, result) => {
-      if (err) {
-        response.message = err;
-        return res.status(400).send(response);
-      } else {
-        response.success = true;
-        response.message = "All books are covered";
-        response.data = result;
-        return res.status(200).send(response);
-      }
+    return new Promise((resolve, reject) => {
+      adminServices
+        .getAllBooksService(id.userId)
+        .then((data) => {
+          resolve(data);
+          response.success = true;
+          response.data = data;
+          response.message = "Book details retrieved";
+          res.status(200).send({ data: response });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+          response.success = false;
+          response.message = err;
+          res.status(500).send({ data: response });
+        });
     });
   } catch (err) {
     response.success = false;
