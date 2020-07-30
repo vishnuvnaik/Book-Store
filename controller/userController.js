@@ -42,34 +42,6 @@ module.exports.register = (req, res) => {
   }
 };
 
-module.exports.update = (req, res) => {
-  try {
-    console.log("request in controller ", req.body);
-    req.checkBody("firstName", "firstname is not valid").isAlpha();
-    req.checkBody("email", "email id is not valid ").isEmail();
-    req.checkBody("lastName", "lastname is not valid ").isAlpha();
-    var error = req.validationErrors();
-    var response = {};
-    if (error) {
-      response.success = false;
-      response.error = error;
-      return res.status(422).send(response);
-    }
-    userService.update(req.body, (err, data) => {
-      if (err) {
-        response.success = false;
-        response.error = error;
-        return res.status(422).send(response);
-      } else {
-        response.data = data;
-        response.success = true;
-        res.status(200).send(response);
-      }
-    });
-  } catch (err) {
-    console.log("error in login controller", err);
-  }
-};
 module.exports.login = (req, res) => {
   try {
     console.log("request in controller ", req.body);
@@ -79,13 +51,13 @@ module.exports.login = (req, res) => {
     var response = {};
     if (error) {
       response.success = false;
-      response.error = "email or password not valid";
+      response.error = "email is not in database";
       return res.status(422).send(response);
     }
     userService.login(req.body, (err, data) => {
       if (err) {
         response.success = false;
-        response.error = "email or password not valid";
+        response.error = "email is not valid ";
         return res.status(422).send(response);
       } else {
         response.data = data;
