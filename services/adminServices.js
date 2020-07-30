@@ -2,13 +2,23 @@ const bookModel = require("../model/admin");
 
 exports.addBooks = (req, callback) => {
   try {
-    bookModel.addBooks(req, (err, data) => {
-      if (err) {
-        return callback(err);
-      } else {
-        return callback(null, data);
-      }
+    return new Promise((resolve, reject) => {
+      bookModel
+        .addBooks(req)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
+    // bookModel.addBooks(req, (err, data) => {
+    //   if (err) {
+    //     return callback(err);
+    //   } else {
+    //     return callback(null, data);
+    //   }
+    // });
   } catch (err) {
     return callback(err);
   }
