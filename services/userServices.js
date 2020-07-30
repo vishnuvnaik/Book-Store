@@ -41,31 +41,34 @@ exports.register = (req, callback) => {
 };
 
 exports.login = (req, callback) => {
-  model.finduser(
-    {
-      email: req.email,
-    },
-    (err, data) => {
-      if (err) {
-        return callback(err);
-      } else if (data.length > 0) {
-        bcrypt.compare(req.password, data[0].password, (err, res) => {
-          if (err) {
-            return callback(err);
-          } else if (res) {
-            console.log("login successful");
-            return callback(null, data);
-          } else {
-            console.log("password incorrect");
-            return callback("password incorrect").status(500);
-          }
-        });
-      } else {
-        console.log("email is not found in the database , try again ");
-        return callback("Invalid User");
+  try {
+    model.finduser(
+      {
+        email: req.email,
+      },
+      (err, data) => {
+        if (err) {
+          return callback(err);
+        } else if (data.length > 0) {
+          bcrypt.compare(req.password, data[0].password, (err, res) => {
+            if (err) {
+              return callback(err);
+            } else if (res) {
+              console.log("login successful");
+              return callback(null, data);
+            } else {
+              console.log("password incorrect");
+              return callback("password incorrect").status(500);
+            }
+          });
+        } else {
+          return callback("email is not found in the database");
+        }
       }
-    }
-  );
+    );
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.forgotPassword = (req, callback) => {
@@ -73,7 +76,6 @@ exports.forgotPassword = (req, callback) => {
     if (err) {
       return callback(err);
     } else if (data) {
-      console.log("Data in usermodel ", data);
       return callback(null, data);
     } else {
       return callback("invalid user");
