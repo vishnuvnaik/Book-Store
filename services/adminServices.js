@@ -12,13 +12,6 @@ exports.addBooks = (req, callback) => {
           reject(err);
         });
     });
-    // bookModel.addBooks(req, (err, data) => {
-    //   if (err) {
-    //     return callback(err);
-    //   } else {
-    //     return callback(null, data);
-    //   }
-    // });
   } catch (err) {
     return callback(err);
   }
