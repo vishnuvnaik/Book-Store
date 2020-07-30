@@ -8,7 +8,6 @@ exports.register = (req, callback) => {
         email: req.email,
       },
       (err, data) => {
-        console.log(data);
         if (err) {
           callback("user exist");
         } else if (data.length > 0) {
@@ -53,15 +52,12 @@ exports.login = (req, callback) => {
           if (err) {
             return callback(err);
           } else if (res) {
-            console.log("login successful");
             return callback(null, data);
           } else {
-            console.log("password incorrect");
             return callback("password incorrect").status(500);
           }
         });
       } else {
-        console.log("email is not found in the database , try again ");
         return callback("Invalid User");
       }
     }
@@ -73,7 +69,6 @@ exports.forgotPassword = (req, callback) => {
     if (err) {
       return callback(err);
     } else if (data) {
-      console.log("Data in usermodel ", data);
       return callback(null, data);
     } else {
       return callback("invalid user");
