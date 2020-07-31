@@ -2,10 +2,13 @@ const model = require("../model/user.js");
 var bcrypt = require("bcrypt");
 
 exports.register = (req, callback) => {
+  let emailnew = {
+    email: req.email,
+  };
   try {
     model.finduser(
       {
-        email: req.email,
+        email: emailnew.email,
       },
       (err, data) => {
         if (err) {
@@ -24,7 +27,7 @@ exports.register = (req, callback) => {
               },
               (err, data) => {
                 if (err) {
-                  return callback(err);
+                  return callback(err, null);
                 } else {
                   return callback(null, data);
                 }
@@ -40,28 +43,36 @@ exports.register = (req, callback) => {
 };
 
 exports.login = (req, callback) => {
-  model.finduser(
-    {
-      email: req.email,
-    },
-    (err, data) => {
-      if (err) {
-        return callback(err);
-      } else if (data.length > 0) {
-        bcrypt.compare(req.password, data[0].password, (err, res) => {
-          if (err) {
-            return callback(err);
-          } else if (res) {
-            return callback(null, data);
-          } else {
-            return callback("password incorrect").status(500);
-          }
-        });
-      } else {
-        return callback("Invalid User");
+  
+  let emaillogin = {
+    email: req.email,
+  };
+  try {
+    model.finduser(
+      {
+        email: emaillogin.email,
+      },
+      (err, data) => {
+        if (err) {
+          return callback(err);
+        } else if (data.length > 0) {
+          bcrypt.compare(req.password, data[0].password, (err, res) => {
+            if (err) {
+              return callback(err);
+            } else if (res) {
+              return callback(null, data);
+            } else {
+              return callback("password incorrect").status(500);
+            }
+          });
+        } else {
+          return callback("Invalid User");
+        }
       }
-    }
-  );
+    );
+  } catch (err) {
+    return err;
+  }
 };
 
 exports.forgotPassword = (req, callback) => {
