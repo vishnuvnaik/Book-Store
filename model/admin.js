@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 var mongoSchema = mongoose.Schema;
-const Schema = mongoose.Schema;
 var adminSchema = new mongoSchema(
   {
     user_id: {
@@ -50,17 +49,21 @@ bookModel.prototype.getBooks = (field, callback) => {
           reject({ error: err });
         });
     });
-    // console.log(field);
-
-    // Books.find({ user_id: field }, (err, result) => {
-    //   if (err) {
-    //     return callback(err);
-    //   } else {
-    //     return callback(null, result);
-    //   }
-    // });
   } catch (err) {
     return callback(err);
   }
 };
+bookModel.prototype.updateBook = (_id, req) => {
+  return new Promise((resolve, reject) => {
+    Books
+      .findbyIdandUpdate(_id, req)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 module.exports = new bookModel();
