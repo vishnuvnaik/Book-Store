@@ -78,17 +78,17 @@ module.exports.getBooks = (req, res) => {
 module.exports.updateBooks = (req, res) => {
   let response = {};
   try {
-    req.checkBody("title", "Title should is invalid ").isAlpha();
-    req.checkBody("bookName", "bookname is invalid").isAlpha();
-    req.checkBody("description", "description is invalid").isAlpha();
-    req.checkBody("quantity", "quantity is invalid").isAlpha();
-    req.checkBody("authorName", "author is invalid").isAlpha();
-    req.checkBody("price", "price is invalid").notEmpty();
+    req.checkBody("title", "Title is invalid ").isAlpha() ||
+      req.checkBody("bookName", "bookname is invalid").isAlpha() ||
+      req.checkBody("description", "description is invalid").isAlpha() ||
+      req.checkBody("quantity", "quantity is invalid").isAlpha() ||
+      req.checkBody("authorName", "author is invalid").isAlpha() ||
+      req.checkBody("price", "price is invalid").notEmpty();
 
     let errors = req.validationErrors();
     if (errors) {
       response.success = false;
-      let data = { message: "Invalid Input" };
+      let data = { message: "Input accordingly" };
       response.data = data;
       res.status(422).send(response);
     } else {
@@ -110,4 +110,33 @@ module.exports.updateBooks = (req, res) => {
   } catch (err) {
     console.log(err);
   }
+};
+module.exports.deleteBook = (req, res) => {
+  var response = {};
+  adminServices
+    .deleteBook(req.params._id)
+    .then((data) => {
+      if (!data) {
+        response.success = false;
+        response.message = "Book not found with id " + req.params._id;
+        res.status(404).send({ data: response });
+      } else {
+        response.success = true;
+        response.data = data;
+        console.log(response);
+        response.message = "Book Deleted Successfully";
+        res.status(200).send({ data: response });
+      }
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        response.success = false;
+        response.message = "Inputted an invalid BookID = " + req.params._id;
+        res.status(404).send({ data: response });
+      } else {
+        response.success = false;
+        response.message = err;
+        res.status(500).send({ data: response });
+      }
+    });
 };
