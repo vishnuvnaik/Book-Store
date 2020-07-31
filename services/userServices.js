@@ -12,9 +12,9 @@ exports.register = (req, callback) => {
       },
       (err, data) => {
         if (err) {
-          callback("user exist");
+          return callback("error occured");
         } else if (data.length > 0) {
-          callback("email exists");
+          return callback("email exists");
         } else {
           bcrypt.hash(req.password, 10, function (err, hash) {
             model.createUser(
@@ -43,7 +43,6 @@ exports.register = (req, callback) => {
 };
 
 exports.login = (req, callback) => {
-  
   let emaillogin = {
     email: req.email,
   };
@@ -54,11 +53,11 @@ exports.login = (req, callback) => {
       },
       (err, data) => {
         if (err) {
-          return callback(err);
+          return callback(err, null);
         } else if (data.length > 0) {
           bcrypt.compare(req.password, data[0].password, (err, res) => {
             if (err) {
-              return callback(err);
+              return callback(err, null);
             } else if (res) {
               return callback(null, data);
             } else {
@@ -78,7 +77,7 @@ exports.login = (req, callback) => {
 exports.forgotPassword = (req, callback) => {
   model.finduser({ email: req.email }, (err, data) => {
     if (err) {
-      return callback(err);
+      return callback(err, null);
     } else if (data) {
       return callback(null, data);
     } else {
@@ -91,7 +90,7 @@ exports.resetPassword = (req, callback) => {
   try {
     bcrypt.hash(req.body.password, 7, (err, encrypted) => {
       if (err) {
-        callback(err);
+        callback(err, null);
       } else {
         model.update(
           req,
@@ -100,7 +99,7 @@ exports.resetPassword = (req, callback) => {
           },
           (err, data) => {
             if (err) {
-              callback(err);
+              callback(err, null);
             } else {
               callback(null, data);
             }
@@ -109,6 +108,6 @@ exports.resetPassword = (req, callback) => {
       }
     });
   } catch (err) {
-    callback(err);
+    callback(err, null);
   }
 };
