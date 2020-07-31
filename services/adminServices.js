@@ -30,7 +30,7 @@ exports.getAllBooksService = (req, callBack) => {
         .catch((err) => reject(err));
     });
   } catch (err) {
-    return callBack(err);
+    return callBack(err, null);
   }
 };
 exports.updateBooks = (_id, req) => {
