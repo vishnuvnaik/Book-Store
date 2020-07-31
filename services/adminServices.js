@@ -1,6 +1,6 @@
 const bookModel = require("../model/admin");
 
-exports.addBooks = (req, callback) => {
+exports.addBooks = (req) => {
   try {
     return new Promise((resolve, reject) => {
       bookModel
@@ -13,7 +13,7 @@ exports.addBooks = (req, callback) => {
         });
     });
   } catch (err) {
-    return callback(err);
+    return err;
   }
 };
 exports.getAllBooksService = (req, callBack) => {
@@ -26,14 +26,19 @@ exports.getAllBooksService = (req, callBack) => {
         })
         .catch((err) => reject(err));
     });
-    // bookModel.getBooks(data, (err, result) => {
-    //   if (err) {
-    //     return callBack(err);
-    //   } else {
-    //     return callBack(null, result);
-    //   }
-    // });
   } catch (err) {
     return callBack(err);
   }
+};
+exports.updateBooks = (_id, req) => {
+  return new Promise((resolve, reject) => {
+    bookModel
+      .updateBook(_id, req)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
