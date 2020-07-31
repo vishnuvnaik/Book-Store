@@ -2,7 +2,6 @@ const cartServices = require("../services/cartServices");
 module.exports.addToCart = (req, res) => {
   let response = {};
   try {
-    
     req.checkBody("quantity", "Quantity should not be empty").notEmpty();
     let error = req.validationErrors();
     if (error) {
@@ -16,7 +15,6 @@ module.exports.addToCart = (req, res) => {
         book_id: req.params._id,
         quantity: req.body.quantity,
       };
-
       cartServices
         .addToCart(filterData)
         .then((data) => {
