@@ -104,7 +104,6 @@ module.exports.forgotPassword = (req, res) => {
 
 module.exports.resetPassword = (req, res) => {
   try {
-    console.log(req.body);
     req.checkBody("password", "password not vaild").isLength({ min: 8 });
     req.checkBody("confirmpassword", "set vaild password").isLength({ min: 8 });
 

@@ -82,3 +82,39 @@ module.exports.getBooks = (req, res) => {
     return res.status(500).send(response);
   }
 };
+module.exports.updateBooks = (req, res) => {
+  let response = {};
+  try {
+    req.checkBody("title", "Title should is invalid ").isAlpha();
+    req.checkBody("bookName", "bookname is invalid").isAlpha();
+    req.checkBody("description", "description is invalid").isAlpha();
+    req.checkBody("quantity", "quantity is invalid").isAlpha();
+    req.checkBody("authorName", "author is invalid").isAlpha();
+    req.checkBody("price", "price is invalid").notEmpty();
+
+    let errors = req.validationErrors();
+    if (errors) {
+      response.success = false;
+      let data = { message: "Invalid Input" };
+      response.data = data;
+      res.status(422).send(response);
+    } else {
+      adminServices
+        .updateBooks(req.params._id, req.body)
+        .then((data) => {
+          response.success = true;
+          response.data = data;
+          response.message = "Book Update Successfully";
+          res.status(200).send({ data: response });
+        })
+        .catch((err) => {
+          console.log(err);
+          response.success = false;
+          response.message = err;
+          res.status(404).send({ data: response });
+        });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
