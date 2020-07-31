@@ -55,7 +55,18 @@ bookModel.prototype.getBooks = (field) => {
 };
 bookModel.prototype.updateBook = (_id, req) => {
   return new Promise((resolve, reject) => {
-    Books.findbyIdandUpdate(_id, req)
+    Books.findByIdAndUpdate(_id, req, { useFindAndModify: false })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+bookModel.prototype.deleteBook = (_id, req) => {
+  return new Promise((resolve, reject) => {
+    Books.findByIdAndRemove(_id, { useFindAndModify: false })
       .then((data) => {
         resolve(data);
       })
