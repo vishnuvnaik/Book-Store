@@ -22,12 +22,6 @@ var registrationSchema = new mongoSchema(
 );
 function usermodel() {}
 var user = mongoose.model("user", registrationSchema);
-// function hash(password) {
-//   var salt = bcrypt.genSaltSync(10);
-//   var hashPassword = bcrypt.hashSync(password, salt);
-//   return hashPassword;
-// }
-
 usermodel.prototype.finduser = (body, callback) => {
   user.find({ email: body.email }, (err, data) => {
     if (err) {
