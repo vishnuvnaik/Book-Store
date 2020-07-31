@@ -17,10 +17,13 @@ exports.addBooks = (req) => {
   }
 };
 exports.getAllBooksService = (req, callBack) => {
+  let findQuery = {
+    find: req.find,
+  };
   try {
     return new Promise((resolve, reject) => {
       bookModel
-        .getBooks(req)
+        .getBooks(findQuery)
         .then((data) => {
           resolve(data);
         })
