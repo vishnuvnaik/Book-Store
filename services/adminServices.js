@@ -45,3 +45,15 @@ exports.updateBooks = (_id, req) => {
       });
   });
 };
+exports.deleteBook = (_id) => {
+  return new Promise((resolve, reject) => {
+    bookModel
+      .deleteBook(_id)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
