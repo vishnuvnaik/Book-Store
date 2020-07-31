@@ -26,24 +26,21 @@ module.exports.addBookController = (req, res) => {
         description: req.body.description,
         bookName: req.body.bookName,
       };
-      return new Promise((resolve, reject) => {
-        adminServices
-          .addBooks(filterData)
-          .then((data) => {
-            resolve(data);
-            response.success = true;
-            response.data = data;
-            response.message = "Book added  Successfully";
-            res.status(200).send({ data: response });
-          })
-          .catch((err) => {
-            reject(err);
-            console.log(err);
-            response.success = false;
-            response.message = err;
-            res.status(500).send({ data: response });
-          });
-      });
+
+      adminServices
+        .addBooks(filterData)
+        .then((data) => {
+          response.success = true;
+          response.data = data;
+          response.message = "Book added  Successfully";
+          res.status(200).send({ data: response });
+        })
+        .catch((err) => {
+          console.log(err);
+          response.success = false;
+          response.message = err;
+          res.status(500).send({ data: response });
+        });
     }
   } catch (err) {
     response.status = false;
@@ -52,30 +49,26 @@ module.exports.addBookController = (req, res) => {
   }
 };
 module.exports.getBooks = (req, res) => {
-  var id = {
-    userId: req.decoded.payload.email,
-  };
-
   let response = {};
+  let find = {};
+  let getBooks = {
+    find,
+  };
   try {
-    return new Promise((resolve, reject) => {
-      adminServices
-        .getAllBooksService(id.userId)
-        .then((data) => {
-          resolve(data);
-          response.success = true;
-          response.data = data;
-          response.message = "Book details retrieved";
-          res.status(200).send({ data: response });
-        })
-        .catch((err) => {
-          reject(err);
-          console.log(err);
-          response.success = false;
-          response.message = err;
-          res.status(500).send({ data: response });
-        });
-    });
+    adminServices
+      .getAllBooksService(getBooks)
+      .then((data) => {
+        response.success = true;
+        response.data = data;
+        response.message = "Book details retrieved";
+        res.status(200).send({ data: response });
+      })
+      .catch((err) => {
+        console.log(err);
+        response.success = false;
+        response.message = err;
+        res.status(500).send({ data: response });
+      });
   } catch (err) {
     response.success = false;
     response.error = err;
