@@ -10,10 +10,14 @@ router.post(
   authenticate.checkTokenAuth,
   adminController.addBookController
 );
-router.put("/books/:_id", adminController.updateBooks);
-// router.delete(
-//   "/books/:_id",
-//   authenticate.checkTokenAuth,
-//   adminController.deleteBooks
-// );
+router.put(
+  "/books/:_id",
+  authenticate.checkTokenAuth,
+  adminController.updateBooks
+);
+router.delete(
+  "/books/:_id",
+  authenticate.checkTokenAuth,
+  adminController.deleteBook
+);
 module.exports = router;
