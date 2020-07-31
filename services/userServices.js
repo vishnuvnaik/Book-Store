@@ -2,13 +2,15 @@ const model = require("../model/user.js");
 var bcrypt = require("bcrypt");
 
 exports.register = (req, callback) => {
+  let emailnew = {
+    email: req.email,
+  };
   try {
     model.finduser(
       {
-        email: req.email,
+        email: emailnew.email,
       },
       (err, data) => {
-        console.log(data);
         if (err) {
           callback("user exist");
         } else if (data.length > 0) {
@@ -25,7 +27,7 @@ exports.register = (req, callback) => {
               },
               (err, data) => {
                 if (err) {
-                  return callback(err);
+                  return callback(err, null);
                 } else {
                   return callback(null, data);
                 }
@@ -41,10 +43,13 @@ exports.register = (req, callback) => {
 };
 
 exports.login = (req, callback) => {
+  let emaillogin = {
+    email: req.email,
+  };
   try {
     model.finduser(
       {
-        email: req.email,
+        email: emaillogin.email,
       },
       (err, data) => {
         if (err) {
@@ -54,20 +59,18 @@ exports.login = (req, callback) => {
             if (err) {
               return callback(err);
             } else if (res) {
-              console.log("login successful");
               return callback(null, data);
             } else {
-              console.log("password incorrect");
               return callback("password incorrect").status(500);
             }
           });
         } else {
-          return callback("email is not found in the database");
+          return callback("Invalid User");
         }
       }
     );
   } catch (err) {
-    console.log(err);
+    return err;
   }
 };
 
@@ -84,19 +87,27 @@ exports.forgotPassword = (req, callback) => {
 };
 
 exports.resetPassword = (req, callback) => {
-  bcrypt.hash(req.body.confirmpassword, 10, (err, data) => {
-    model.updateOne(
-      { email: req.body.email },
-      {
-        password: data,
-      },
-      (err, data) => {
-        if (data) {
-          callback(null, data);
-        } else {
-          callback("error");
-        }
+  try {
+    bcrypt.hash(req.body.password, 7, (err, encrypted) => {
+      if (err) {
+        callback(err);
+      } else {
+        model.update(
+          req,
+          {
+            password: encrypted,
+          },
+          (err, data) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback(null, data);
+            }
+          }
+        );
       }
-    );
-  });
+    });
+  } catch (err) {
+    callback(err);
+  }
 };
