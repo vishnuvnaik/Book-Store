@@ -44,20 +44,19 @@ module.exports.register = (req, res) => {
 
 module.exports.login = (req, res) => {
   try {
-    console.log("request in controller ", req.body);
     req.checkBody("email", "email id is not valid ").isEmail();
     req.checkBody("password", "password is not valid ").isLength({ min: 8 });
     var error = req.validationErrors();
     var response = {};
     if (error) {
       response.success = false;
-      response.error = "email is not in database";
+      response.error = "email or password not valid";
       return res.status(422).send(response);
     }
     userService.login(req.body, (err, data) => {
       if (err) {
         response.success = false;
-        response.error = "email is not valid ";
+        response.error = "email or password not valid";
         return res.status(422).send(response);
       } else {
         response.data = data;
@@ -105,8 +104,8 @@ module.exports.forgotPassword = (req, res) => {
 
 module.exports.resetPassword = (req, res) => {
   try {
-    req.checkBody("password", "password not vaild").len(8, 13);
-    req.checkBody("confirmpassword", "set vaild password").len(8, 13);
+    req.checkBody("password", "password not vaild").isLength({ min: 8 });
+    req.checkBody("confirmpassword", "set vaild password").isLength({ min: 8 });
 
     var error = req.validationErrors();
     var response = {};
