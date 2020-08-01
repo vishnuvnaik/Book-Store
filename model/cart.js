@@ -39,5 +39,24 @@ cartModel.prototype.addToCart = (req) => {
     console.log(err);
   }
 };
+cartModel.prototype.getAllItemsFromCart = (field) => {
+  try {
+    return new Promise((resolve, reject) => {
+      Cart.find(field.find)
+        .then((data) => {
+          if (data.length == 0) {
+            resolve({ message: "Book Not found", data: data });
+          } else {
+            resolve({ message: "Books found", data: data });
+          }
+        })
+        .catch((err) => {
+          reject({ error: err });
+        });
+    });
+  } catch (err) {
+    return callback(err);
+  }
+};
 
 module.exports = new cartModel();

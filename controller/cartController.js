@@ -35,3 +35,30 @@ module.exports.addToCart = (req, res) => {
     return res.status(500).send(response);
   }
 };
+module.exports.getAllItemsFromCart = (req, res) => {
+  let response = {};
+  let find = {};
+  let getBooks = {
+    find,
+  };
+  try {
+    cartServices
+      .getAllItemsFromCart(getBooks)
+      .then((data) => {
+        response.success = true;
+        response.data = data;
+        response.message = "Book details retrieved";
+        res.status(200).send({ data: response });
+      })
+      .catch((err) => {
+        console.log(err);
+        response.success = false;
+        response.message = err;
+        res.status(500).send({ data: response });
+      });
+  } catch (err) {
+    response.success = false;
+    response.error = err;
+    return res.status(500).send(response);
+  }
+};

@@ -10,5 +10,10 @@ router.post(
   authenticate.checkTokenAuth,
   cartController.addToCart
 );
+router.get(
+  "/getCart/:_id",
+  authenticate.checkTokenAuth,
+  cartController.getAllItemsFromCart
+);
 
 module.exports = router;
