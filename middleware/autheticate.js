@@ -9,9 +9,14 @@ exports.checkTokenAuth = (req, res, next) => {
           status: false,
           message: "Unauthorised access, please provide valid token!",
         });
-      } else {
+      } else if (decoded.payload.role == "admin") {
         req.decoded = decoded;
         next();
+      } else {
+        return res.send({
+          status: false,
+          message: "Not authorised!Only admin has access",
+        });
       }
     });
   } else {
