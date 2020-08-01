@@ -21,8 +21,9 @@ module.exports.register = (req, res) => {
     var errors = req.validationErrors();
     var response = {};
     if (errors) {
-      response.error = errors;
       response.success = false;
+      response.message = { message: "Invalid Input" };
+      response.error = errors;
       return res.status(422).send(response);
     } else {
       userService.register(req.body, (err, data) => {

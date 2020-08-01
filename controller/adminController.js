@@ -13,8 +13,9 @@ module.exports.addBookController = (req, res) => {
 
     let error = req.validationErrors();
     if (error) {
-      response.status = false;
-      response.error = error;
+      response.success = false;
+      response.message = { message: "Invalid Input" };
+      response.error = errors;
       return res.status(422).send(response);
     } else {
       let filterData = {
