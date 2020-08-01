@@ -63,7 +63,8 @@ module.exports.login = (req, res) => {
         response.data = data;
         var payload = {
           email: data[0].email,
-          password: data[0].password,
+          role: data[0].role,
+          id: data[0]._id,
         };
         let code = token.GenerateToken(payload); //generates token for authentication
         response.token = code.token;
