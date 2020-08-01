@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const user = require("./user");
+
 var mongoSchema = mongoose.Schema;
 var cartSchema = new mongoSchema(
   {
