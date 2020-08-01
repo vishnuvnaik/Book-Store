@@ -45,20 +45,21 @@ module.exports.register = (req, res) => {
 
 module.exports.login = (req, res) => {
   try {
-    req.checkBody("email", "email id is not valid ").isEmail();
+    req.checkBody("email", "email id is not valid ").notEmpty().isEmail();
     req.checkBody("password", "password is not valid ").isLength({ min: 8 });
-    var error = req.validationErrors();
+    var errors = req.validationErrors();
     var response = {};
-    if (error) {
+    if (errors) {
       response.success = false;
-      response.error = "email or password not valid";
+      response.message = { message: "Invalid Input" };
+      response.error = errors;
       return res.status(422).send(response);
     }
     userService.login(req.body, (err, data) => {
       if (err) {
-        response.success = false;
-        response.error = "email or password not valid";
-        return res.status(422).send(response);
+        response.data = err;
+        response.sucess = false;
+        res.status(500).send(response);
       } else {
         response.data = data;
         var payload = {
