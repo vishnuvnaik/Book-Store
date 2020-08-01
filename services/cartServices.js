@@ -1,5 +1,4 @@
 const cartModel = require("../model/cart");
-const cart = require("../model/cart");
 
 exports.addToCart = (req) => {
   try {
