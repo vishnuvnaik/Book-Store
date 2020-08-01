@@ -5,11 +5,10 @@ module.exports.addToCart = (req, res) => {
     req.checkBody("quantity", "Quantity should not be empty").notEmpty();
     let error = req.validationErrors();
     if (error) {
-      response.status = false;
+      response.status = { message: "Invalid Input" };
       response.error = error;
       return res.status(422).send(response);
     } else {
-      console.log(req.decoded);
       let filterData = {
         user_id: req.headers.user_id,
         book_id: req.params._id,
