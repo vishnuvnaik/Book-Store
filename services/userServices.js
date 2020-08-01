@@ -61,11 +61,11 @@ exports.login = (req, callback) => {
             } else if (res) {
               return callback(null, data);
             } else {
-              return callback("password incorrect").status(500);
+              return callback("password is incorrect try again");
             }
           });
         } else {
-          return callback("Invalid User");
+          return callback("Email doesnot exist in database");
         }
       }
     );
