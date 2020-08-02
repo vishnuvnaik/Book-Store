@@ -53,6 +53,7 @@ bookModel.prototype.getBooks = (field) => {
     return callback(err);
   }
 };
+
 bookModel.prototype.updateBook = (_id, req) => {
   return new Promise((resolve, reject) => {
     Books.findByIdAndUpdate(_id, req, { useFindAndModify: false })
@@ -64,6 +65,7 @@ bookModel.prototype.updateBook = (_id, req) => {
       });
   });
 };
+
 bookModel.prototype.deleteBook = (_id, req) => {
   return new Promise((resolve, reject) => {
     Books.findByIdAndRemove(_id, { useFindAndModify: false })
