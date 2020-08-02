@@ -18,13 +18,11 @@ exports.addToCart = (req) => {
   }
 };
 exports.getAllItemsFromCart = (req, callBack) => {
-  let findQuery = {
-    find: req.find,
-  };
+  
   try {
     return new Promise((resolve, reject) => {
       cartModel
-        .getAllItemsFromCart(findQuery)
+        .getAllItemsFromCart(req)
         .then((data) => {
           resolve(data);
         })

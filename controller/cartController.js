@@ -37,13 +37,12 @@ module.exports.addToCart = (req, res) => {
 };
 module.exports.getAllItemsFromCart = (req, res) => {
   let response = {};
-  let find = {};
-  let getBooks = {
-    find,
+  var id = {
+    userId: req.decoded.payload.email,
   };
   try {
     cartServices
-      .getAllItemsFromCart(getBooks)
+      .getAllItemsFromCart(id.userId)
       .then((data) => {
         response.success = true;
         response.data = data;

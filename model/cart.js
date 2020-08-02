@@ -42,7 +42,7 @@ cartModel.prototype.addToCart = (req) => {
 cartModel.prototype.getAllItemsFromCart = (field) => {
   try {
     return new Promise((resolve, reject) => {
-      Cart.find(field.find)
+      Cart.find({ user_id: field })
         .then((data) => {
           if (data.length == 0) {
             resolve({ message: "Book Not found", data: data });
