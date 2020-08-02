@@ -21,7 +21,7 @@ var cartSchema = new mongoSchema(
   }
 );
 var Cart = mongoose.model("Cart", cartSchema);
-function cartModel() {}
+function cartModel() { }
 cartModel.prototype.addToCart = (req) => {
   try {
     return new Promise((resolve, reject) => {
@@ -58,5 +58,4 @@ cartModel.prototype.getAllItemsFromCart = (field) => {
     return callback(err);
   }
 };
-
 module.exports = new cartModel();
