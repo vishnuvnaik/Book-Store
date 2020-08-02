@@ -6,7 +6,7 @@ var cartSchema = new mongoSchema(
     user_id: {
       type: mongoSchema.Types.ObjectId,
       required: true,
-      ref: "user",
+      ref: "users",
     },
     book_id: {
       type: mongoSchema.Types.ObjectId,

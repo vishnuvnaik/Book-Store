@@ -38,7 +38,7 @@ module.exports.addToCart = (req, res) => {
 module.exports.getAllItemsFromCart = (req, res) => {
   let response = {};
   var id = {
-    userId: req.decoded.payload.email,
+    userId: req.params._id,
   };
   try {
     cartServices
