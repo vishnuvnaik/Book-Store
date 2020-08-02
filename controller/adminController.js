@@ -7,8 +7,8 @@ module.exports.addBookController = (req, res) => {
     req.checkBody("authorName", "Author should not be empty").notEmpty();
     req.checkBody("title", "Title should not be empty").notEmpty();
     req.checkBody("bookName", "bookname should not be empty").notEmpty();
-    req.checkBody("quantity", "Quantity should not be empty").notEmpty();
-    req.checkBody("price", "Price should not be empty").notEmpty();
+    req.checkBody("quantity", "Quantity should not be empty").notEmpty().isNumeric();
+    req.checkBody("price", "Price should not be empty").notEmpty().isNumeric();
     req.checkBody("description", "Description should not be empty").notEmpty();
 
     let error = req.validationErrors();

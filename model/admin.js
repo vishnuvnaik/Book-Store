@@ -6,16 +6,16 @@ var adminSchema = new mongoSchema(
     authorName: { type: String, required: [true, "authorname is required"] },
     title: { type: String, required: [true, "title is required"] },
     description: { type: String, required: [true, "description is required"] },
-    quantity: { type: String, required: [true, "quantity is required"] },
-    price: { type: String, required: [true, "price is required"] },
+    quantity: { type: Number, required: [true, "quantity is required"] },
+    price: { type: Number, required: [true, "price is required"] },
   },
   {
     timestamps: true,
-  }
+  } 
 );
 var Books = mongoose.model("Books", adminSchema);
 
-function bookModel() {}
+function bookModel() { }
 
 bookModel.prototype.addBooks = (req) => {
   try {
@@ -49,6 +49,22 @@ bookModel.prototype.getBooks = (field) => {
           reject({ error: err });
         });
     });
+  } catch (err) {
+    return callback(err);
+  }
+};
+
+bookModel.prototype.getAvailableBooks = (field, callback) => {
+  try {
+    Books.findById(field.bookId, (err, data) => {
+      if (err) {
+        console.log("Error in register user schema ");
+        return callback(err);
+      } else {
+        return callback(null, data);
+      }
+    });
+
   } catch (err) {
     return callback(err);
   }
