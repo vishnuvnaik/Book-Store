@@ -58,4 +58,16 @@ cartModel.prototype.getAllItemsFromCart = (field) => {
     return callback(err);
   }
 };
+
+cartModel.prototype.updateCart = (_id, req) => {
+  return new Promise((resolve, reject) => {
+    Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 module.exports = new cartModel();
