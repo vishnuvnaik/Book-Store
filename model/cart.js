@@ -45,7 +45,7 @@ cartModel.prototype.getAllItemsFromCart = (field) => {
       Cart.find({ user_id: field })
         .then((data) => {
           if (data.length == 0) {
-            resolve({ message: "Book Not found", data: data });
+            resolve({ message: "No books are found in this user id", data: data });
           } else {
             resolve({ message: "Books found", data: data });
           }

@@ -40,32 +40,26 @@ module.exports.getAllItemsFromCart = (req, res) => {
   var id = {
     userId: req.params._id,
   };
-  try {
-    cartServices
-      .getAllItemsFromCart(id.userId)
-      .then((data) => {
-        response.success = true;
-        response.data = data;
-        response.message = "Book details retrieved";
-        res.status(200).send({ data: response });
-      })
-      .catch((err) => {
-        console.log(err);
+
+  cartServices
+    .getAllItemsFromCart(id.userId)
+    .then((data) => {
+      response.success = true;
+      response.data = data;
+      res.status(200).send({ data: response });
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
         response.success = false;
-        response.message = err;
+        response.message = "Inputted an invalid userID = " + req.params._id;
+        res.status(404).send({ data: response });
+      } else {
+        response.success = false;
+        response.message = "userID is not in database";
         res.status(500).send({ data: response });
-      });
-  } catch (err) {
-    if (err.kind === "ObjectId") {
-      response.success = false;
-      response.message = "Inputted an invalid userID = " + req.params._id;
-      res.status(404).send({ data: response });
-    } else {
-      response.success = false;
-      response.message = err;
-      res.status(500).send({ data: response });
-    }
-  }
+      }
+    });
+
 };
 module.exports.updateCart = (req, res) => {
   let response = {};
