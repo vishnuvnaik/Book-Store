@@ -2,10 +2,10 @@ const cartModel = require("../model/cart");
 const bookModel = require("../model/admin");
 
 exports.addToCart = (req, callback) => {
+  let response = {};
   try {
     return new Promise((resolve, reject) => {
       bookModel.getAvailableBooks({ bookId: req.book_id }).then((data) => {
-        console.log(data.data.quantity)
         if (data.data.quantity > req.quantity) {
           resolve(data)
           return new Promise((resolve, reject) => {
@@ -20,7 +20,9 @@ exports.addToCart = (req, callback) => {
           })
         }
         else {
-          return callback(err)
+          response.success = false;
+          response.message = "Quantity is not available";
+          reject(response)
         }
       }).catch((err) => {
         reject(err);
