@@ -82,9 +82,9 @@ module.exports.updateBooks = (req, res) => {
     req.checkBody("title", "Title is invalid ").isAlpha() ||
       req.checkBody("bookName", "bookname is invalid").isAlpha() ||
       req.checkBody("description", "description is invalid").isAlpha() ||
-      req.checkBody("quantity", "quantity is invalid").isAlpha() ||
+      req.checkBody("quantity", "quantity is invalid").isNumeric() ||
       req.checkBody("authorName", "author is invalid").isAlpha() ||
-      req.checkBody("price", "price is invalid").notEmpty();
+      req.checkBody("price", "price is invalid").isNumeric();
 
     let errors = req.validationErrors();
     if (errors) {
