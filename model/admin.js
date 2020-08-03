@@ -11,7 +11,7 @@ var adminSchema = new mongoSchema(
   },
   {
     timestamps: true,
-  } 
+  }
 );
 var Books = mongoose.model("Books", adminSchema);
 
@@ -56,14 +56,26 @@ bookModel.prototype.getBooks = (field) => {
 
 bookModel.prototype.getAvailableBooks = (field, callback) => {
   try {
-    Books.findById(field.bookId, (err, data) => {
-      if (err) {
-        console.log("Error in register user schema ");
-        return callback(err);
-      } else {
-        return callback(null, data);
-      }
+    return new Promise((resolve, reject) => {
+      console.log(field)
+      Books.findById(field.bookId)
+        .then((data) => {
+
+          resolve({ data: data });
+
+        })
+        .catch((err) => {
+          reject({ error: err });
+        });
     });
+    // Books.findById(field.bookId, (err, data) => {
+    //   if (err) {
+    //     console.log("Error in register user schema ");
+    //     return callback(err);
+    //   } else {
+    //     return callback(null, data);
+    //   }
+    //});
 
   } catch (err) {
     return callback(err);
