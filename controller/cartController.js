@@ -5,7 +5,7 @@ module.exports.addToCart = (req, res) => {
     req.checkBody("quantity", "Quantity should not be empty").notEmpty();
     let error = req.validationErrors();
     if (error) {
-      response.status = { message: "Invalid Input" };
+      response.status = { message: "Quantity should be positive integer" };
       response.error = error;
       return res.status(422).send(response);
     } else {
@@ -56,9 +56,15 @@ module.exports.getAllItemsFromCart = (req, res) => {
         res.status(500).send({ data: response });
       });
   } catch (err) {
-    response.success = false;
-    response.error = err;
-    return res.status(500).send(response);
+    if (err.kind === "ObjectId") {
+      response.success = false;
+      response.message = "Inputted an invalid userID = " + req.params._id;
+      res.status(404).send({ data: response });
+    } else {
+      response.success = false;
+      response.message = err;
+      res.status(500).send({ data: response });
+    }
   }
 };
 module.exports.updateCart = (req, res) => {
@@ -69,7 +75,7 @@ module.exports.updateCart = (req, res) => {
     let errors = req.validationErrors();
     if (errors) {
       response.success = false;
-      let data = { message: "Invalid input " };
+      let data = { message: "Quantity should be positive integer only " };
       response.data = data;
       res.status(422).send(response);
     } else {
@@ -82,13 +88,47 @@ module.exports.updateCart = (req, res) => {
           res.status(200).send({ data: response });
         })
         .catch((err) => {
-          console.log(err);
-          response.success = false;
-          response.message = err;
-          res.status(404).send({ data: response });
+          if (err.kind === "ObjectId") {
+            response.success = false;
+            response.message = "Inputted an invalid CartID = " + req.params._id;
+            res.status(404).send({ data: response });
+          } else {
+            response.success = false;
+            response.message = err;
+            res.status(500).send({ data: response });
+          }
         });
     }
   } catch (err) {
     console.log(err);
   }
+};
+module.exports.removeFromCart = (req, res) => {
+  var response = {};
+  cartServices
+    .removeFromCart(req.params._id)
+    .then((data) => {
+      if (!data) {
+        response.success = false;
+        response.message = "Cart not found with id " + req.params._id;
+        res.status(404).send({ data: response });
+      } else {
+        response.success = true;
+        response.data = data;
+        console.log(response);
+        response.message = "Removed item from cart successfully";
+        res.status(200).send({ data: response });
+      }
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        response.success = false;
+        response.message = "Inputted an invalid cartID = " + req.params._id;
+        res.status(404).send({ data: response });
+      } else {
+        response.success = false;
+        response.message = err;
+        res.status(500).send({ data: response });
+      }
+    });
 };

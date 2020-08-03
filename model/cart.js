@@ -70,4 +70,15 @@ cartModel.prototype.updateCart = (_id, req) => {
       });
   });
 };
+cartModel.prototype.removeFromCart = (_id) => {
+  return new Promise((resolve, reject) => {
+    Cart.findByIdAndRemove(_id, { useFindAndModify: false })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 module.exports = new cartModel();

@@ -20,5 +20,10 @@ router.put(
   authenticate.checkTokenAuth,
   cartController.updateCart
 );
+router.delete(
+  "/cart/:_id",
+  authenticate.checkTokenAuth,
+  cartController.removeFromCart
+);
 
 module.exports = router;

@@ -57,3 +57,15 @@ exports.updateCart = (_id, req) => {
       });
   });
 };
+exports.removeFromCart = (_id) => {
+  return new Promise((resolve, reject) => {
+    cartModel
+      .removeFromCart(_id)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
