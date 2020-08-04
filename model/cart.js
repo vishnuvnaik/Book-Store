@@ -40,45 +40,15 @@ cartModel.prototype.addToCart = (req) => {
   }
 };
 cartModel.prototype.getAllItemsFromCart = (field) => {
-  try {
-    return new Promise((resolve, reject) => {
-      Cart.find({ user_id: field })
-        .then((data) => {
-          if (data.length == 0) {
-            resolve({ message: "No books are found in this user id", data: data });
-          } else {
-            resolve({ message: "Books found", data: data });
-          }
-        })
-        .catch((err) => {
-          reject({ error: err });
-        });
-    });
-  } catch (err) {
-    return callback(err);
-  }
+  return Cart.find({ user_id: field })
 };
 
 cartModel.prototype.updateCart = (_id, req) => {
-  return new Promise((resolve, reject) => {
-    Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+  return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false })
 };
 cartModel.prototype.removeFromCart = (_id) => {
-  return new Promise((resolve, reject) => {
-    Cart.findByIdAndRemove(_id, { useFindAndModify: false })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+
+  return Cart.findByIdAndRemove(_id, { useFindAndModify: false })
+
 };
 module.exports = new cartModel();
