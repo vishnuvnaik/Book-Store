@@ -2,28 +2,26 @@ const cartModel = require("../model/cart");
 const bookModel = require("../model/admin");
 
 exports.addToCart = (req, callback) => {
-  let response = {};
   try {
     return new Promise((resolve, reject) => {
-      bookModel.getAvailableBooks({ bookId: req.book_id }).then((data) => {
-        if (data.data.quantity > req.quantity) {
-          cartModel
-            .addToCart(req)
-            .then((data) => {
-              resolve(data);
-            })
-            .catch((err) => {
-              reject(err);
-            })
-        }
-        else {
-          response.success = false;
-          response.message = "Quantity is not available";
-          reject(response)
-        }
-      }).catch((err) => {
-        reject(err);
-      })
+      bookModel.getAvailableBooks({ bookId: req.book_id })
+        .then((data) => {
+          if (data.data.quantity > req.quantity) {
+            cartModel
+              .addToCart(req)
+              .then((data) => {
+                resolve(data);
+              })
+              .catch((err) => {
+                reject(err);
+              })
+          }
+          else {
+            reject("Quantity is not available")
+          }
+        }).catch((err) => {
+          reject(err);
+        })
     })
 
   } catch (err) {
@@ -37,7 +35,12 @@ exports.getAllItemsFromCart = (req, callBack) => {
       cartModel
         .getAllItemsFromCart(req)
         .then((data) => {
-          resolve(data);
+          if (data.length == 0) {
+            resolve({ message: "No books are found in this user id" });
+          }
+          else {
+            resolve(data);
+          }
         })
         .catch((err) => reject(err));
     });
@@ -46,17 +49,29 @@ exports.getAllItemsFromCart = (req, callBack) => {
   }
 };
 exports.updateCart = (_id, req) => {
-  return new Promise((resolve, reject) => {
-    cartModel
-      .updateCart(_id, req)
-      .then((data) => {
-        resolve(data);
+  let response = {};
+  try {
+    return new Promise((resolve, reject) => {
+      bookModel.getAvailableBooks({ bookId: req.book_id }).then((data) => {
+        if (data.data.quantity > req.quantity) {
+          cartModel
+            .updateCart(_id, req)
+            .then((data) => {
+              resolve(data);
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        } else {
+          reject("Quantity is not available")
+        }
       })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
+    })
+  } catch (err) {
+    return callBack(err, null);
+  }
+
+}
 exports.removeFromCart = (_id) => {
   return new Promise((resolve, reject) => {
     cartModel
