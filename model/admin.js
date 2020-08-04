@@ -35,75 +35,22 @@ bookModel.prototype.addBooks = (req) => {
   }
 };
 bookModel.prototype.getBooks = (field) => {
-  try {
-    return new Promise((resolve, reject) => {
-      Books.find(field.find)
-        .then((data) => {
-          if (data.length == 0) {
-            resolve({ message: "Book Not found", data: data });
-          } else {
-            resolve({ message: "Books found", data: data });
-          }
-        })
-        .catch((err) => {
-          reject({ error: err });
-        });
-    });
-  } catch (err) {
-    return callback(err);
-  }
-};
+  return Books.find(field.find)
+}
 
-bookModel.prototype.getAvailableBooks = (field, callback) => {
-  try {
-    return new Promise((resolve, reject) => {
-      console.log(field)
-      Books.findById(field.bookId)
-        .then((data) => {
-
-          resolve({ data: data });
-
-        })
-        .catch((err) => {
-          reject({ error: err });
-        });
-    });
-    // Books.findById(field.bookId, (err, data) => {
-    //   if (err) {
-    //     console.log("Error in register user schema ");
-    //     return callback(err);
-    //   } else {
-    //     return callback(null, data);
-    //   }
-    //});
-
-  } catch (err) {
-    return callback(err);
-  }
+bookModel.prototype.getAvailableBooks = (field) => {
+  return Books.findById(field.bookId)
 };
 
 bookModel.prototype.updateBook = (_id, req) => {
-  return new Promise((resolve, reject) => {
-    Books.findByIdAndUpdate(_id, req, { useFindAndModify: false })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+
+  return Books.findByIdAndUpdate(_id, req, { useFindAndModify: false })
+
 };
 
-bookModel.prototype.deleteBook = (_id, req) => {
-  return new Promise((resolve, reject) => {
-    Books.findByIdAndRemove(_id, { useFindAndModify: false })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+bookModel.prototype.deleteBook = (_id) => {
+  return Books.findByIdAndRemove(_id, { useFindAndModify: false })
+
 };
 
 module.exports = new bookModel();
