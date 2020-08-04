@@ -1,12 +1,12 @@
 const cartModel = require("../model/cart");
 const bookModel = require("../model/admin");
 
-exports.addToCart = (req, callback) => {
+module.exports.addToCart = (req) => {
   try {
     return new Promise((resolve, reject) => {
       bookModel.getAvailableBooks({ bookId: req.book_id })
         .then((data) => {
-          if (data.data.quantity > req.quantity) {
+          if (data.quantity > req.quantity) {
             cartModel
               .addToCart(req)
               .then((data) => {
@@ -28,7 +28,7 @@ exports.addToCart = (req, callback) => {
     return err;
   }
 };
-exports.getAllItemsFromCart = (req, callBack) => {
+module.exports.getAllItemsFromCart = (req) => {
 
   try {
     return new Promise((resolve, reject) => {
@@ -45,15 +45,14 @@ exports.getAllItemsFromCart = (req, callBack) => {
         .catch((err) => reject(err));
     });
   } catch (err) {
-    return callBack(err, null);
+    return err
   }
 };
-exports.updateCart = (_id, req) => {
-  let response = {};
+module.exports.updateCart = (_id, req) => {
   try {
     return new Promise((resolve, reject) => {
       bookModel.getAvailableBooks({ bookId: req.book_id }).then((data) => {
-        if (data.data.quantity > req.quantity) {
+        if (data.quantity > req.quantity) {
           cartModel
             .updateCart(_id, req)
             .then((data) => {
@@ -68,11 +67,11 @@ exports.updateCart = (_id, req) => {
       })
     })
   } catch (err) {
-    return callBack(err, null);
+    return err;
   }
 
 }
-exports.removeFromCart = (_id) => {
+module.exports.removeFromCart = (_id) => {
   return new Promise((resolve, reject) => {
     cartModel
       .removeFromCart(_id)
