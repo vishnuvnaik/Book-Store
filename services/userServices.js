@@ -1,7 +1,7 @@
 const model = require("../model/user.js");
 var bcrypt = require("bcrypt");
 
-exports.register = (req, callback) => {
+module.exports.register = (req, callback) => {
   let emailnew = {
     email: req.email,
   };
@@ -42,7 +42,7 @@ exports.register = (req, callback) => {
   }
 };
 
-exports.login = (req, callback) => {
+module.exports.login = (req, callback) => {
   let emaillogin = {
     email: req.email,
   };
@@ -65,7 +65,7 @@ exports.login = (req, callback) => {
             }
           });
         } else {
-          return callback("Email doesnot exist in database");
+          return callback("Couldnt find your bookstore account");
         }
       }
     );
@@ -74,7 +74,7 @@ exports.login = (req, callback) => {
   }
 };
 
-exports.forgotPassword = (req, callback) => {
+module.exports.forgotPassword = (req, callback) => {
   model.finduser({ email: req.email }, (err, data) => {
     if (err) {
       return callback(err, null);
@@ -86,7 +86,7 @@ exports.forgotPassword = (req, callback) => {
   });
 };
 
-exports.resetPassword = (req, callback) => {
+module.exports.resetPassword = (req, callback) => {
   try {
     bcrypt.hash(req.body.password, 7, (err, encrypted) => {
       if (err) {
@@ -108,6 +108,6 @@ exports.resetPassword = (req, callback) => {
       }
     });
   } catch (err) {
-    callback(err, null);
+    return err;
   }
 };
