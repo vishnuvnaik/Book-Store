@@ -1,6 +1,6 @@
 const bookModel = require("../model/admin");
 
-exports.addBooks = (req) => {
+module.exports.addBooks = (req) => {
   try {
     return new Promise((resolve, reject) => {
       bookModel
@@ -16,7 +16,7 @@ exports.addBooks = (req) => {
     return err;
   }
 };
-exports.getAllBooksService = (req, callBack) => {
+module.exports.getAllBooksService = (req) => {
   let findQuery = {
     find: req.find,
   };
@@ -30,10 +30,10 @@ exports.getAllBooksService = (req, callBack) => {
         .catch((err) => reject(err));
     });
   } catch (err) {
-    return callBack(err, null);
+    return err
   }
 };
-exports.updateBooks = (_id, req) => {
+module.exports.updateBooks = (_id, req) => {
   return new Promise((resolve, reject) => {
     bookModel
       .updateBook(_id, req)
@@ -45,7 +45,7 @@ exports.updateBooks = (_id, req) => {
       });
   });
 };
-exports.deleteBook = (_id) => {
+module.exports.deleteBook = (_id) => {
   return new Promise((resolve, reject) => {
     bookModel
       .deleteBook(_id)
