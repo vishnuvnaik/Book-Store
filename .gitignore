@@ -1,3 +1,8 @@
 /node_modules
 /.env
-/package-lock
+/package-lock.json
+/combined.log
+/info.log
+/.vscode
+
+
