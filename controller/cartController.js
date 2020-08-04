@@ -73,8 +73,12 @@ module.exports.updateCart = (req, res) => {
       response.data = data;
       res.status(422).send(response);
     } else {
+      let filterData = {
+        book_id: req.headers.book_id,
+        quantity: req.body.quantity,
+      };
       cartServices
-        .updateCart(req.params._id, req.body)
+        .updateCart(req.params._id, filterData)
         .then((data) => {
           response.success = true;
           response.data = data;
