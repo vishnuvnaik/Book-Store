@@ -9,6 +9,8 @@ const router = require("./routes/userRoutes.js");
 const adminRouter = require("./routes/adminRoutes.js");
 const cartRouter = require("./routes/cartRoutes");
 const cart = require("./model/cart.js");
+const logger = require("./config/logger")
+
 
 require("dotenv").config();
 
@@ -24,9 +26,11 @@ app.use("/", adminRouter);
 app.use("/", cartRouter);
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+// app.listen(process.env.PORT, () => {
+//   logger.info(`server is listening to ${process.env.PORT}`);
+// })
 const server = app.listen(process.env.PORT, () => {
-  console.log("server listening on port ", process.env.PORT);
+  logger.info("server listening on port ", process.env.PORT);
   dbConfig.dbConnection();
 });
 
