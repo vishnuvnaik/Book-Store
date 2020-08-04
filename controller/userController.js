@@ -69,7 +69,7 @@ module.exports.login = (req, res) => {
         };
         let code = token.GenerateToken(payload); //generates token for authentication
         response.token = code.token;
-        response.data = data;
+        //response.data = data;
         response.success = true;
         res.status(200).send(response);
       }
