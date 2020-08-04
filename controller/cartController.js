@@ -1,4 +1,6 @@
 const cartServices = require("../services/cartServices");
+const logger = require("../config/logger")
+
 module.exports.addToCart = (req, res) => {
   let response = {};
   try {
@@ -47,6 +49,7 @@ module.exports.getAllItemsFromCart = (req, res) => {
       response.success = true;
       response.data = data;
       res.status(200).send({ data: response });
+
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
@@ -63,43 +66,43 @@ module.exports.getAllItemsFromCart = (req, res) => {
 };
 module.exports.updateCart = (req, res) => {
   let response = {};
-  try {
 
-    req.checkBody("quantity", "quantity is invalid").isNumeric();
-    let errors = req.validationErrors();
-    if (errors) {
-      response.success = false;
-      let data = { message: "Quantity should be positive integer only " };
-      response.data = data;
-      res.status(422).send(response);
-    } else {
-      let filterData = {
-        book_id: req.headers.book_id,
-        quantity: req.body.quantity,
-      };
-      cartServices
-        .updateCart(req.params._id, filterData)
-        .then((data) => {
-          response.success = true;
-          response.data = data;
-          response.message = "Cart Updated Successfully";
-          res.status(200).send({ data: response });
-        })
-        .catch((err) => {
-          if (err.kind === "ObjectId") {
-            response.success = false;
-            response.message = "Inputted an invalid CartID = " + req.params._id;
-            res.status(404).send({ data: response });
-          } else {
-            response.success = false;
-            response.message = err;
-            res.status(500).send({ data: response });
-          }
-        });
-    }
-  } catch (err) {
-    console.log(err);
+
+  req.checkBody("quantity", "quantity is invalid").isNumeric();
+  let errors = req.validationErrors();
+  if (errors) {
+    response.success = false;
+    let data = { message: "Quantity should be positive integer only " };
+    response.data = data;
+    res.status(422).send(response);
+  } else {
+    let filterData = {
+      book_id: req.headers.book_id,
+      quantity: req.body.quantity,
+    };
+    cartServices
+      .updateCart(req.params._id, filterData)
+      .then((data) => {
+        response.success = true;
+        response.data = data;
+        response.message = "Cart Updated Successfully";
+        res.status(200).send({ data: response });
+      })
+      .catch((err) => {
+        if (err.kind === "ObjectId") {
+          response.success = false;
+          response.message = "Inputted an invalid CartID = " + req.params._id;
+          res.status(404).send({ data: response });
+        } else {
+          response.success = false;
+          response.message = err;
+          res.status(500).send({ data: response });
+        }
+      });
   }
+  // } catch (err) {
+  //   console.log(err);
+  // }
 };
 module.exports.removeFromCart = (req, res) => {
   var response = {};

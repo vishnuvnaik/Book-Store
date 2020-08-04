@@ -1,6 +1,6 @@
 const adminServices = require("../services/adminServices");
 const admin = require("../model/admin");
-
+const logger = require("../config/logger")
 module.exports.addBookController = (req, res) => {
   let response = {};
   try {
@@ -14,8 +14,8 @@ module.exports.addBookController = (req, res) => {
     let error = req.validationErrors();
     if (error) {
       response.success = false;
-      response.message = { message: "Invalid Input" };
-      response.error = errors;
+      response.message = { error };
+
       return res.status(422).send(response);
     } else {
       let filterData = {
@@ -62,6 +62,7 @@ module.exports.getBooks = (req, res) => {
         response.success = true;
         response.data = data;
         response.message = "Book details retrieved";
+        logger.info("books retreived");
         res.status(200).send({ data: response });
       })
       .catch((err) => {
@@ -79,17 +80,17 @@ module.exports.getBooks = (req, res) => {
 module.exports.updateBooks = (req, res) => {
   let response = {};
   try {
-    req.checkBody("title", "Title is invalid ").isAlpha() ||
+    req.checkBody("quantity", "quantity is invalid").isNumeric() ||
+      req.checkBody("title", "Title is invalid ").isAlpha() ||
       req.checkBody("bookName", "bookname is invalid").isAlpha() ||
       req.checkBody("description", "description is invalid").isAlpha() ||
-      req.checkBody("quantity", "quantity is invalid").isNumeric() ||
       req.checkBody("authorName", "author is invalid").isAlpha() ||
       req.checkBody("price", "price is invalid").isNumeric();
 
     let errors = req.validationErrors();
     if (errors) {
       response.success = false;
-      let data = { message: "Input accordingly" };
+      let data = { errors };
       response.data = data;
       res.status(422).send(response);
     } else {
