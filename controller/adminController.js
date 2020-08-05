@@ -18,7 +18,6 @@ module.exports.addBookController = (req, res) => {
       return res.status(422).send(response);
     } else {
       let filterData = {
-        user_id: req.decoded.payload.email,
         authorName: req.body.authorName,
         genre: req.body.genre,
         quantity: req.body.quantity,
