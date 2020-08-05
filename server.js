@@ -8,8 +8,10 @@ const mongoose = require("mongoose");
 const router = require("./routes/userRoutes.js");
 const adminRouter = require("./routes/adminRoutes.js");
 const cartRouter = require("./routes/cartRoutes");
-const cart = require("./model/cart.js");
-const logger = require("./config/logger")
+const customerRouter = require("./routes/customerRoutes");
+
+const logger = require("./config/logger");
+const customer = require("./model/customer.js");
 
 
 require("dotenv").config();
@@ -24,6 +26,7 @@ app.use(expressValidator());
 app.use("/", router);
 app.use("/", adminRouter);
 app.use("/", cartRouter);
+app.use("/", customerRouter);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.listen(process.env.PORT, () => {
