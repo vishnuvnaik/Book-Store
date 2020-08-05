@@ -1,11 +1,10 @@
 const adminServices = require("../services/adminServices");
-const admin = require("../model/admin");
 const logger = require("../config/logger")
 module.exports.addBookController = (req, res) => {
   let response = {};
   try {
     req.checkBody("authorName", "Author should not be empty").notEmpty();
-    req.checkBody("title", "Title should not be empty").notEmpty();
+    req.checkBody("genre", "genre should not be empty").notEmpty();
     req.checkBody("bookName", "bookname should not be empty").notEmpty();
     req.checkBody("quantity", "Quantity should not be empty").notEmpty().isNumeric();
     req.checkBody("price", "Price should not be empty").notEmpty().isNumeric();
@@ -21,7 +20,7 @@ module.exports.addBookController = (req, res) => {
       let filterData = {
         user_id: req.decoded.payload.email,
         authorName: req.body.authorName,
-        title: req.body.title,
+        genre: req.body.genre,
         quantity: req.body.quantity,
         price: req.body.price,
         description: req.body.description,
@@ -81,7 +80,7 @@ module.exports.updateBooks = (req, res) => {
   let response = {};
   try {
     req.checkBody("quantity", "quantity is invalid").isNumeric() ||
-      req.checkBody("title", "Title is invalid ").isAlpha() ||
+      req.checkBody("genre", "genre is invalid ").isAlpha() ||
       req.checkBody("bookName", "bookname is invalid").isAlpha() ||
       req.checkBody("description", "description is invalid").isAlpha() ||
       req.checkBody("authorName", "author is invalid").isAlpha() ||
