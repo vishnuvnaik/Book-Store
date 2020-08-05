@@ -6,12 +6,12 @@ const authenticate = require("../middleware/autheticateuser");
 // user routes
 // router.get("/books", authenticate.checkTokenAuth, cartController.addToCart);
 router.post(
-  "/addtocart/:_id",
+  "/cart/:_id",
   authenticate.checkTokenAuth,
   cartController.addToCart
 );
 router.get(
-  "/getCart/:_id",
+  "/cart/:_id",
   authenticate.checkTokenAuth,
   cartController.getAllItemsFromCart
 );

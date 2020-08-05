@@ -8,13 +8,13 @@ var cartSchema = new mongoSchema(
       required: true,
       ref: "users",
     },
-    book_id: {
+    product_id: {
       type: mongoSchema.Types.ObjectId,
       required: true,
       ref: "books",
     },
     quantity: { type: Number, required: [true, "quantity is required"] },
-    isOrdered: { type: Boolean, required: true, default: false },
+    isActive: { type: Boolean, required: true, default: true },
   },
   {
     timestamps: true,
@@ -23,22 +23,10 @@ var cartSchema = new mongoSchema(
 var Cart = mongoose.model("Cart", cartSchema);
 function cartModel() { }
 cartModel.prototype.addToCart = (req) => {
-  try {
-    return new Promise((resolve, reject) => {
-      let cartAdd = new Cart(req);
-      cartAdd
-        .save()
-        .then((result) => {
-          resolve({ data: result });
-        })
-        .catch((err) => {
-          reject({ error: err });
-        });
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
+  let cartAdd = new Cart(req);
+  return cartAdd.save()
+
+}
 cartModel.prototype.getAllItemsFromCart = (field) => {
   return Cart.find({ user_id: field })
 };

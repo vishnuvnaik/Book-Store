@@ -13,7 +13,7 @@ module.exports.addToCart = (req, res) => {
     } else {
       let filterData = {
         user_id: req.headers.user_id,
-        book_id: req.params._id,
+        product_id: req.params._id,
         quantity: req.body.quantity,
       };
       cartServices
@@ -46,6 +46,7 @@ module.exports.getAllItemsFromCart = (req, res) => {
   cartServices
     .getAllItemsFromCart(id.userId)
     .then((data) => {
+      response.message = "Cart details retreived";
       response.success = true;
       response.data = data;
       res.status(200).send({ data: response });
@@ -77,7 +78,7 @@ module.exports.updateCart = (req, res) => {
     res.status(422).send(response);
   } else {
     let filterData = {
-      book_id: req.headers.book_id,
+      product_id: req.headers.product_id,
       quantity: req.body.quantity,
     };
     cartServices

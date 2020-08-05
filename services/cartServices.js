@@ -4,9 +4,12 @@ const bookModel = require("../model/admin");
 module.exports.addToCart = (req) => {
   try {
     return new Promise((resolve, reject) => {
-      bookModel.getAvailableBooks({ bookId: req.book_id })
+      bookModel.getAvailableBooks({ product_id: req.product_id })
         .then((data) => {
-          if (data.quantity > req.quantity) {
+          if (data == null) {
+            reject("Book is not available")
+          }
+          else if (data.quantity > req.quantity) {
             cartModel
               .addToCart(req)
               .then((data) => {
@@ -51,7 +54,7 @@ module.exports.getAllItemsFromCart = (req) => {
 module.exports.updateCart = (_id, req) => {
   try {
     return new Promise((resolve, reject) => {
-      bookModel.getAvailableBooks({ bookId: req.book_id }).then((data) => {
+      bookModel.getAvailableBooks({ product_id: req.product_id }).then((data) => {
         if (data.quantity > req.quantity) {
           cartModel
             .updateCart(_id, req)
