@@ -5,8 +5,8 @@ module.exports.addAddress = (req, res) => {
         req.checkBody("name", "name should not be empty").notEmpty();
         req.checkBody("city", "city should not be empty").notEmpty();
         req.checkBody("landmark", "landmark should not be empty").notEmpty();
-        req.checkBody("pincode", "pincode should not be empty").notEmpty().isNumeric();
-        req.checkBody("phoneNumber", "phoneNumber should not be empty").notEmpty().isMobilePhone();
+        req.checkBody("pincode", "pincode should not be empty").notEmpty().isNumeric().isLength({ min: 6, max: 6 });
+        req.checkBody("phoneNumber", "phoneNumber should not be empty").notEmpty().isLength({ min: 10, max: 10 });
         req.checkBody("state", "state should not be empty").notEmpty();
         req.checkBody("address", "address should not be empty").notEmpty();
         req.checkBody("addressType", "address type should not be empty").notEmpty().isAlpha();
@@ -28,7 +28,6 @@ module.exports.addAddress = (req, res) => {
                 address: req.body.address,
                 addressType: req.body.addressType
             };
-
             customerServices
                 .addAddress(filterData)
                 .then((data) => {
