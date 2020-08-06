@@ -1,8 +1,10 @@
 const userService = require("../services/userServices");
 const token = require("../middleware/token");
+const logger = require("../config/logger")
 const mailer = require("../middleware/sendMail");
 
 module.exports.register = (req, res) => {
+
   try {
     req
       .checkBody("firstName", "firstname not valid ")
@@ -39,7 +41,14 @@ module.exports.register = (req, res) => {
       });
     }
   } catch (err) {
-    console.log("error in register controller", err);
+    logger.error(err);
+    if (err instanceof TypeError ||
+      err instanceof ReferenceError) {
+      logger.error("programming error:", err);
+    }
+    else {
+      logger.warn('user defined error:', err);
+    }
   }
 };
 
