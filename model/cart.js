@@ -28,7 +28,13 @@ cartModel.prototype.addToCart = (req) => {
 
 }
 cartModel.prototype.getAllItemsFromCart = (field) => {
-  return Cart.find({ user_id: field })
+  if (field.match(/^[0-9a-fA-F]{24}$/)) {
+    return Cart.find({ user_id: field })
+  }
+  else {
+    //need to write code here 
+  }
+
 };
 
 cartModel.prototype.updateCart = (_id, req) => {
