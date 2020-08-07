@@ -22,10 +22,10 @@ var orderDetailsSchema = new mongoSchema(
         timestamps: true,
     }
 );
-var OrderDetails = mongoose.model("Order", orderDetailsSchema);
+var OrderDetails = mongoose.model("OrderDetails", orderDetailsSchema);
 function orderModel() { }
-orderModel.prototype.addToCart = (req) => {
-    let orderAdd = new OrderDetails(req);
-    return orderAdd.save()
+orderModel.prototype.placeOrder = (req) => {
+    let orderPlace = new OrderDetails(req);
+    return orderPlace.save()
 }
 module.exports = new orderModel();
