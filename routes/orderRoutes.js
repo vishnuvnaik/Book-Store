@@ -1,5 +1,6 @@
 const express = require("express");
 const orderController = require("../controller/orderController");
+const orderDetailsController = require("../controller/orderDetailsController")
 const router = express.Router();
 const authenticate = require("../middleware/autheticateuser");
 
@@ -10,6 +11,11 @@ router.post(
     authenticate.checkTokenAuth,
     orderController.addOrder
 );
+// router.post(
+//     "/placeOrder/:_id",
+//     authenticate.checkTokenAuth,
+//     orderDetailsController.placeOrder
+// );
 
 
 module.exports = router;
