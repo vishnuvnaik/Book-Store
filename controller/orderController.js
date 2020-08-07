@@ -1,4 +1,6 @@
-const orderServices = require("../services/orderServices");
+const Service = require("../services/orderServices");
+const orderServices = new Service()
+
 
 module.exports.addOrder = (req, res) => {
     let response = {};
@@ -9,9 +11,11 @@ module.exports.addOrder = (req, res) => {
             response.error = error;
             return res.status(422).send(response);
         } else {
+
             let filterData = {
-                user_id: req.headers.user_id,
+                user_id: req.decoded.payload.id,
                 shippingAddress: req.params._id,
+                product_id: req.headers.product_id,
             };
             orderServices
                 .addOrder(filterData)
@@ -35,7 +39,7 @@ module.exports.addOrder = (req, res) => {
             res.status(404).send({ data: response });
         } else {
             response.success = false;
-            response.message = "userID is not in database";
+            response.message = "cart is empty for this user";
             res.status(500).send({ data: response });
         }
     }
