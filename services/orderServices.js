@@ -72,6 +72,7 @@ module.exports = class OrderServices {
                                                             let req1 = cartdetails.product_id.quantity;
                                                             let req2 = cartdetails.quantity;
                                                             let req3 = req1 - req2;
+                                                            let quantityBody = ({ quantity: req3 })
                                                             cartModel
                                                                 .updateCart(cartdetails.id, req)
                                                                 .then((data) => {
@@ -81,7 +82,7 @@ module.exports = class OrderServices {
                                                                     reject(err);
                                                                 });
                                                             bookModel
-                                                                .updateBook(_id, req3)
+                                                                .updateBook(cartdetails.product_id._id,quantityBody)
                                                                 .then((data) => {
                                                                     resolve(data);
                                                                 })
@@ -116,33 +117,33 @@ module.exports = class OrderServices {
             return err;
         }
     }
-    updateCart(id) {
-        return new Promise((resolve, reject) => {
-            let req = ({ isActive: false })
-            cartModel
-                .updateCart(id, req)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        })
-    }
-    updateBook(cartdetails) {
-        return new Promise((resolve, reject) => {
-            let cart = cartdetails;
-            let req = ({ isActive: false })
-            cartdetails.forEach((cartdetails) => {
-                cartModel
-                    .updateCart(cartdetails._id, req)
-                    .then((data) => {
-                        resolve(data);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            })
-        })
-    }
+    // updateCart(id) {
+    //     return new Promise((resolve, reject) => {
+    //         let req = ({ isActive: false })
+    //         cartModel
+    //             .updateCart(id, req)
+    //             .then((data) => {
+    //                 resolve(data);
+    //             })
+    //             .catch((err) => {
+    //                 reject(err);
+    //             });
+    //     })
+    // }
+    // updateBook(cartdetails) {
+    //     return new Promise((resolve, reject) => {
+    //         let cart = cartdetails;
+    //         let req = ({ isActive: false })
+    //         cartdetails.forEach((cartdetails) => {
+    //             cartModel
+    //                 .updateCart(cartdetails._id, req)
+    //                 .then((data) => {
+    //                     resolve(data);
+    //                 })
+    //                 .catch((err) => {
+    //                     reject(err);
+    //                 });
+    //         })
+    //     })
+    // }
 }
