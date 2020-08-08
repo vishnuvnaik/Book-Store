@@ -9,7 +9,7 @@ module.exports = class OrderServices {
             return new Promise((resolve, reject) => {
                 cartModel.getAllItemsFromCart(req.user_id)
                     .then((data) => {
-                        let sum = 0;
+
                         if (data.length <= 0) {
                             reject("Cart is empty for this user")
                         }
@@ -42,27 +42,38 @@ module.exports = class OrderServices {
                         {
                             cartModel.getItemsByUserProduct(req)
                                 .then((data) => {
-                                    var quantity = data.data[0].quantity;
+                                    let sum = 0;
+                                    let cartdetails = data.filter((data) => {
+                                        if (data.isActive === true) {
+                                            sum = sum + data.quantity * data.product_id.price;
+                                            return data;
+                                        } else {
+                                            reject({ message: "No Cart is avaliable" });
+                                        }
+                                    });
+
                                     if (data.length <= 0) {
                                         resolve({ message: "cart is empty", data: data });
                                     }
                                     else if (data !== null) {
                                         bookModel.getAvailableBooks(req).then((data) => {
-                                            console.log(data.price)
                                             if (data !== null) {
-                                                let totalAmount = quantity * data.price;
-                                                let filterData = {
-                                                    order_id: order_id,
-                                                    product_id: req.product_id,
-                                                    totalAmount: totalAmount
-                                                };
-                                                orderDetails.placeOrder(filterData)
-                                                    .then((data) => {
-                                                        resolve(data);
-                                                    })
-                                                    .catch((err) => {
-                                                        reject(err);
-                                                    });
+                                                let totalAmount = sum;
+                                                cartdetails.forEach((cartdetails) => {
+                                                    let filterData = {
+                                                        order_id: order_id,
+                                                        product_id: cartdetails.product_id._id,
+                                                        totalAmount: totalAmount
+                                                    };
+                                                    orderDetails.placeOrder(filterData)
+                                                        .then((data) => {
+                                                            resolve(data);
+                                                            this.updateCart(cartdetails._id)
+                                                        })
+                                                        .catch((err) => {
+                                                            reject(err);
+                                                        });
+                                                })
                                             }
                                             else {
                                                 reject({ message: "error in placing order,retry" })
@@ -84,5 +95,19 @@ module.exports = class OrderServices {
         } catch (err) {
             return err;
         }
+    }
+    updateCart(id) {
+        return new Promise((resolve, reject) => {
+            let req = ({ isActive: false })
+            cartModel
+                .updateCart(id, req)
+                .then((data) => {
+                    resolve(data);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        })
+
     }
 };
