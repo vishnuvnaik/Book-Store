@@ -6,12 +6,12 @@ var cartSchema = new mongoSchema(
     user_id: {
       type: mongoSchema.Types.ObjectId,
       required: true,
-      ref: "users",
+      ref: "user",
     },
     product_id: {
       type: mongoSchema.Types.ObjectId,
       required: true,
-      ref: "books",
+      ref: "Books",
     },
     quantity: { type: Number, required: [true, "quantity is required"] },
     isActive: { type: Boolean, required: true, default: true },
@@ -37,23 +37,27 @@ cartModel.prototype.getAllItemsFromCart = (field) => {
 
 };
 cartModel.prototype.getItemsByUserProduct = (field) => {
+  return Cart
+    .find({ user_id: field.user_id })
+    .populate("product_id", "price quantity");
+}
 
-  try {
-    return new Promise((resolve, reject) => {
-      Cart.find({ user_id: field.user_id, product_id: field.product_id })
-        .then((data) => {
-          resolve({ data });
-        })
-        .catch((err) => {
-          reject({ error: err });
-        });
-    });
-  }
-  catch (err) {
-    console.log(err)
-  }
+// try {
+//   return new Promise((resolve, reject) => {
+//     Cart.find({ user_id: field.user_id, product_id: field.product_id })
+//       .then((data) => {
+//         resolve({ data });
+//       })
+//       .catch((err) => {
+//         reject({ error: err });
+//       });
+//   });
+// }
+// catch (err) {
+//   console.log(err)
+// }
 
-};
+//};
 
 cartModel.prototype.updateCart = (_id, req) => {
   return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false })
