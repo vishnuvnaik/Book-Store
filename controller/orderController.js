@@ -1,13 +1,12 @@
 const Service = require("../services/orderServices");
 const orderServices = new Service()
-
+const constantsParam = require('../constants/static');
 
 module.exports.addOrder = (req, res) => {
     let response = {};
     try {
         let error = req.validationErrors();
         if (error) {
-            response.status = { message: "Problem in ids inputted" };
             response.error = error;
             return res.status(422).send(response);
         } else {
@@ -23,7 +22,7 @@ module.exports.addOrder = (req, res) => {
                     response.success = true;
                     //  response.data = data;
                     response.message = "Order placed,proceed to checkout";
-                    res.status(200).send({ data: response });
+                    return res.status(constantsParam.staticHTTPSuccessMessages.OK.successResponseCode).send({ data: response });
                 })
                 .catch((err) => {
                     console.log(err);
