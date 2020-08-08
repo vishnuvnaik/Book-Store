@@ -48,7 +48,7 @@ module.exports = class OrderServices {
                                             sum = sum + data.quantity * data.product_id.price;
                                             return data;
                                         } else {
-                                            reject({ message: "No Cart is avaliable" });
+                                            reject({ message: "No active products in cart are avaliable" });
                                         }
                                     });
 
@@ -68,7 +68,27 @@ module.exports = class OrderServices {
                                                     orderDetails.placeOrder(filterData)
                                                         .then((data) => {
                                                             resolve(data);
-                                                            this.updateCart(cartdetails._id)
+                                                            let req = ({ isActive: false })
+                                                            let req1 = cartdetails.product_id.quantity;
+                                                            let req2 = cartdetails.quantity;
+                                                            let req3 = req1 - req2;
+                                                            cartModel
+                                                                .updateCart(cartdetails.id, req)
+                                                                .then((data) => {
+                                                                    resolve(data);
+                                                                })
+                                                                .catch((err) => {
+                                                                    reject(err);
+                                                                });
+                                                            bookModel
+                                                                .updateBook(_id, req3)
+                                                                .then((data) => {
+                                                                    resolve(data);
+                                                                })
+                                                                .catch((err) => {
+                                                                    reject(err);
+                                                                });
+
                                                         })
                                                         .catch((err) => {
                                                             reject(err);
@@ -108,6 +128,21 @@ module.exports = class OrderServices {
                     reject(err);
                 });
         })
-
     }
-};
+    updateBook(cartdetails) {
+        return new Promise((resolve, reject) => {
+            let cart = cartdetails;
+            let req = ({ isActive: false })
+            cartdetails.forEach((cartdetails) => {
+                cartModel
+                    .updateCart(cartdetails._id, req)
+                    .then((data) => {
+                        resolve(data);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            })
+        })
+    }
+}
