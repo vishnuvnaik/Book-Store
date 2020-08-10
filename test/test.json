@@ -1,0 +1,82 @@
+{
+    "register": {
+        "firstName": "vishnu",
+        "lastName": "naik",
+        "email": "vishnu@gmail.com",
+        "role": "user",
+        "password": "qwertyuiop"
+    },
+    "login": {
+        "email": "vishnu@gmail.com",
+        "password": "qwertyuiop"
+    },
+    "loginWrong1": {
+        "email": "vishnu.com",
+        "password": "qwertyuiop"
+    },
+    "loginWrong2": {
+        "email": "",
+        "password": "qwertyuiop"
+    },
+    "loginWrong3": {
+        "email": "vishnu@gmail.com",
+        "password": ""
+    },
+    "loginWrong4": {
+        "email": "vishnu@gmail.com",
+        "password": "qw"
+    },
+    "loginWrong5": {
+        "email": "vishnu@gmail.com",
+        "password": "qwqwertyuiop"
+    },
+    "forgotPassword": {
+        "email": "vishnuvdev17@gmail.com"
+    },
+    "resetpassword": {
+        "password": "qwertyuiop",
+        "confirmpassword": "qwertyuiop",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOiI1ZTUzYzU4MzcwNDY2ZDdhNWExZmViNTYiLCJlbWFpbCI6ImFydW5hQGdtYWlsLmNvbSJ9LCJpYXQiOjE1ODI2MTU3NDgsImV4cCI6MTU4MjcwMjE0OH0.5swmYZ5ueE_dOvXFcmIUm9rRk5_vzlyoNjEohrydBcQ"
+    },
+    "registerwrong": {
+        "firstName": "vishnu",
+        "lastName": "naik",
+        "email": "vishnu@gmail.com",
+        "password": "1234"
+    },
+    "registerwrong1": {
+        "firstName": "",
+        "lastName": "naik",
+        "email": "vishnu@gmail.com",
+        "password": ""
+    },
+    "registerwrong2": {
+        "firstName": 1234,
+        "lastName": "naik",
+        "email": "vishnu@.com",
+        "password": ""
+    },
+    "registerwrong3": {
+        "firstName": 1234,
+        "lastName": "naik",
+        "email": "vishnu@.com",
+        "password": ""
+    },
+    "registerwrong4": {
+        "firstName": "",
+        "lastName": "",
+        "email": "@.com",
+        "password": ""
+    },
+    "forgotpasswordwrong": {
+        "email": "vishnu"
+    },
+    "forgotpasswordwrong1": {
+        "email": "vishnu@mailmail.com"
+    },
+    "resetpasswordwrong": {
+        "password": "ppp",
+        "confirmpassword": "qqq",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOiI1ZTUzYzU4MzcwNDY2ZDdhNWExZmViNTYiLCJlbWFpbCI6ImFydW5hQGdtYWlsLmNvbSJ9LCJpYXQiOjE1ODI2MTU3NDgsImV4cCI6MTU4MjcwMjE0OH0.5swmYZ5ueE_dOvXFcmIUm9rRk5_vzlyoNjEohrydBcQ"
+    }
+}
