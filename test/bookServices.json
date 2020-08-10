@@ -1,0 +1,18 @@
+{
+    "addBook200": {
+        "authorName": "chetan bhagat",
+        "bookName": "aaaa",
+        "genre": "sdfsdf",
+        "quantity": "12",
+        "price": "123",
+        "description": "uysdfgyu aogfuhuhu"
+    },
+    "addBook422": {
+        "authorName": "22",
+        "bookName": "aaaa",
+        "genre": "",
+        "quantity": "2kk",
+        "price": "123",
+        "description": "uysdfgyu aogfuhuhu"
+    }
+}
