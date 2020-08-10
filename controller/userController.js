@@ -17,9 +17,9 @@ module.exports.register = (req, res) => {
     req.checkBody("email", "Enter a valid email").isEmail();
     req.checkBody("role", "role not valid").isLength({ min: 2 }).isAlpha();
     req.checkBody("password", "Enter a valid password").isLength({ min: 8 });
-    req
-      .checkBody("confirmpassword", "passwords do not match")
-      .equals(req.body.password);
+    // req
+    //   .checkBody("confirmpassword", "passwords do not match")
+    //   .equals(req.body.password);
     var errors = req.validationErrors();
     var response = {};
     if (errors) {
@@ -90,25 +90,36 @@ module.exports.login = (req, res) => {
 
 module.exports.forgotPassword = (req, res) => {
   try {
-    userService.forgotPassword(req.body, (err, data) => {
-      var responses = {};
-      if (err) {
-        return res.status(500).send({ message: err });
-      } else {
-        responses.success = true;
-        responses.result = data;
-        responses.message = "Forgot link";
-        const payload = {
-          user_email: req.body.email,
-        };
+    req.checkBody("email", "email id is not valid ").notEmpty().isEmail();
+    var errors = req.validationErrors();
+    var response = {};
+    if (errors) {
+      response.success = false;
+      response.message = { message: "Invalid Input" };
+      response.error = errors;
+      return res.status(422).send(response);
+    }
+    else {
+      userService.forgotPassword(req.body, (err, data) => {
+        var responses = {};
+        if (err) {
+          return res.status(500).send({ message: err });
+        } else {
+          responses.success = true;
+          responses.result = data;
+          responses.message = "Forgot link";
+          const payload = {
+            user_email: req.body.email,
+          };
 
-        const code = token.GenerateToken(payload);
-        const url = `http://localhost:5000/resetPassword/${code.token}`;
-        mailer.sendMail(url, req.body.email);
-        responses.success = true;
-        res.status(200).send(url);
-      }
-    });
+          const code = token.GenerateToken(payload);
+          const url = `http://localhost:5000/resetPassword/${code.token}`;
+          mailer.sendMail(url, req.body.email);
+          responses.success = true;
+          res.status(200).send(url);
+        }
+      });
+    }
   } catch (error) {
     console.log(error);
   }
