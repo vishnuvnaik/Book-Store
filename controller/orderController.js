@@ -1,6 +1,8 @@
 const Service = require("../services/orderServices");
 const orderServices = new Service()
 const constantsParam = require('../constants/static');
+const logger = require("../config/logger");
+const { CastError } = require("mongoose");
 
 module.exports.addOrder = (req, res) => {
     let response = {};
@@ -8,7 +10,9 @@ module.exports.addOrder = (req, res) => {
         let error = req.validationErrors();
         if (error) {
             response.error = error;
-            return res.status(422).send(response);
+
+            return res.status(constantsParam.staticHTTPErrorMessages.UNPROCESSABLE_ENTITY.errorResponseMessage)
+                .send({ data: response });
         } else {
 
             let filterData = {
@@ -21,8 +25,9 @@ module.exports.addOrder = (req, res) => {
                 .then((data) => {
                     response.success = true;
                     //  response.data = data;
-                    response.message = "Order placed,proceed to checkout";
-                    return res.status(constantsParam.staticHTTPSuccessMessages.OK.successResponseCode).send({ data: response });
+                    response.message = "Order placed";
+                    return res.status(constantsParam.staticHTTPSuccessMessages.OK.successResponseCode).
+                        send({ data: response });
                 })
                 .catch((err) => {
                     console.log(err);
@@ -32,9 +37,21 @@ module.exports.addOrder = (req, res) => {
                 });
         }
     } catch (err) {
+        // logger.error(err);
+        // if (err instanceof TypeError ||
+        //     err instanceof ReferenceError ||
+        //     err instanceof SyntaxError ||
+        //     err instanceof AssertionError ||
+        //     err instanceof RangeError ||
+        //     err instanceof EvalError ) {
+        //     logger.error("programming error:", err);
+        // }
+        // else {
+        //     logger.warn('user defined error:', err);
+        // }
         if (err.kind === "ObjectId") {
             response.success = false;
-            response.message = "Inputted an invalid userID = " + req.params._id;
+            response.message = "Inputted an invalid shippingID = " + req.params._id;
             res.status(404).send({ data: response });
         } else {
             response.success = false;
