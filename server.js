@@ -9,7 +9,7 @@ const router = require("./routes/userRoutes.js");
 const adminRouter = require("./routes/adminRoutes.js");
 const cartRouter = require("./routes/cartRoutes");
 const customerRouter = require("./routes/customerRoutes");
-
+const orderRouter = require("./routes/orderRoutes");
 const logger = require("./config/logger");
 const customer = require("./model/customer.js");
 
@@ -27,6 +27,7 @@ app.use("/", router);
 app.use("/", adminRouter);
 app.use("/", cartRouter);
 app.use("/", customerRouter);
+app.use("/", orderRouter);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.listen(process.env.PORT, () => {
