@@ -4,7 +4,7 @@
   "description": "Repository for bookstore app backend.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/_mocha --reporter spec",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -28,13 +28,18 @@
     "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^5.3.0",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.1.1",
     "mongoose": "^5.9.10",
     "nodemailer": "^6.4.6",
     "nodemon": "^2.0.3",
+    "redis": "^3.0.2",
     "winston": "^3.3.3"
   }
 }
