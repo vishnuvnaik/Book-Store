@@ -4,7 +4,7 @@ const router = express.Router();
 const authenticate = require("../middleware/autheticate");
 
 // user routes
-router.get("/books", authenticate.checkTokenAuth, adminController.getBooks);
+router.get("/books", adminController.getBooks);
 router.post(
   "/books",
   authenticate.checkTokenAuth,
@@ -20,4 +20,5 @@ router.delete(
   authenticate.checkTokenAuth,
   adminController.deleteBook
 );
+router.post('/search', adminController.searchingBooks)
 module.exports = router;
