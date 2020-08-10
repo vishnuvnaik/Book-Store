@@ -44,6 +44,11 @@ module.exports = {
             errorCategory: 'CONFLICT',
             errorResponseCode: 409,
             errorResponseMessage: 'The request could not be completed due to a conflict with the current state of the resource.',
+        },
+        UNPROCESSABLE_ENTITY: {
+            errorCategory: 'CONFLICT',
+            errorResponseCode: 422,
+            errorResponseMessage: 'The request is unable to process.',
         }
     },
     staticHTTPSuccessMessages: {
