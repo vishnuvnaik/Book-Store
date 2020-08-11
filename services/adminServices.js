@@ -1,20 +1,19 @@
 const bookModel = require("../model/admin");
-const redisDb = require('./cache')
-const logger = require("../config/logger")
+const redisDb = require("./cache");
+const logger = require("../config/logger");
 module.exports = class AdminServices {
   async refreshRedis(uniqueId) {
     try {
-      let redisResult = await redisDb.deleteKeys(uniqueId)
-      logger.info("redis result", redisResult)
+      let redisResult = await redisDb.deleteKeys(uniqueId);
+      logger.info("redis result", redisResult);
       if (redisResult) {
-        return redisResult
-      }
-      else {
-        return false
+        return redisResult;
+      } else {
+        return false;
       }
     } catch (error) {
-      logger.error(error)
-      return error
+      logger.error(error);
+      return error;
     }
   }
   addBooks = (req) => {
@@ -27,17 +26,26 @@ module.exports = class AdminServices {
             resolve(data);
 
             if (data !== null) {
-              let refreshResult = this.refreshRedis(uniqueId)
+              let refreshResult = this.refreshRedis(uniqueId);
               if (refreshResult) {
-                logger.info(`Redis refreshed !`)
-                return { "success": true, "message": "Books added SUCCESFULLY !", "data": data }
-              } else { // problem occured while refreshing redis
-                logger.info(`Redis not refreshed .`)
-                return { "success": true, "message": "books added SUCCESFULLY (NO DATA IN REDIS TO REFRESH )", "data": noteResult }
+                logger.info(`Redis refreshed !`);
+                return {
+                  success: true,
+                  message: "Books added SUCCESFULLY !",
+                  data: data,
+                };
+              } else {
+                // problem occured while refreshing redis
+                logger.info(`Redis not refreshed .`);
+                return {
+                  success: true,
+                  message:
+                    "books added SUCCESFULLY (NO DATA IN REDIS TO REFRESH )",
+                  data: data,
+                };
               }
-            }
-            else {
-              reject({ message: "data not received" })
+            } else {
+              reject({ message: "data not received" });
             }
           })
           .catch((err) => {
@@ -48,34 +56,72 @@ module.exports = class AdminServices {
       return err;
     }
   };
-  getAllBooksService = (req) => {
+  async getAllBooksService(req) {
     let findQuery = {
       find: req.find,
     };
     try {
-      return new Promise((resolve, reject) => {
-        bookModel
-          .getBooks(findQuery)
-          .then((data) => {
-            resolve(data);
-
-            if (data.length > 0) {
-
-              let key = "books1234";
-              let redisResult = redisDb.setCache(key, JSON.stringify(data))
-              logger.info('redis result ', redisResult)
-              return { "success": true, "message": "ALL BOOKS LOADED SUCCESSFULLY !", "data": data }
-            }
-            else {
-              reject(err)
-            }
-          })
-          .catch((err) => reject(err));
-      });
+      let result = await redisDb.getCache("books1234");
+      if (result) {
+        //checking for the data present in redis cache
+        //books retrieved from redis database
+        // normal request to get all books without giving page no and size
+        if (req.pageNo === undefined || req.size === undefined) {
+          logger.info(`A request is being made without pagination !`);
+          return {
+            success: true,
+            message: "ALL BOOKS LOADED SUCCESSFULLY !",
+            data: JSON.parse(result),
+          };
+        } else {
+          // request with page no and size
+          let pageNo = parseInt(req.pageNo);
+          let size = parseInt(req.size);
+          logger.info(
+            `A request is being made with pagination ! Page no - ${pageNo} , Size - ${size}`
+          );
+          let parsedResult = JSON.parse(result);
+          logger.info("All books --->", parsedResult);
+          //slice used for pagination
+          let sliceResult = await parsedResult.slice(
+            (pageNo - 1) * size,
+            pageNo * size
+          ); //range is set here
+          if (sliceResult) {
+            logger.info("Redis result", JSON.parse(sliceResult));
+            return {
+              success: true,
+              message: "ALL Books LOADED SUCCESSFULLY !",
+              data: JSON.parse(sliceResult),
+            };
+          }
+        }
+      } else {
+        return new Promise((resolve, reject) => {
+          bookModel
+            .getBooks(findQuery)
+            .then((data) => {
+              resolve(data);
+              if (data.length > 0) {
+                let key = "books1234";
+                let redisResult = redisDb.setCache(key, JSON.stringify(data));
+                logger.info("redis result ", redisResult);
+                return {
+                  success: true,
+                  message: "ALL BOOKS LOADED SUCCESSFULLY !",
+                  data: data,
+                };
+              } else {
+                reject(err);
+              }
+            })
+            .catch((err) => reject(err));
+        });
+      }
     } catch (err) {
-      return err
+      return err;
     }
-  };
+  }
   updateBooks = (_id, req) => {
     return new Promise((resolve, reject) => {
       bookModel
@@ -102,35 +148,40 @@ module.exports = class AdminServices {
   };
   async searchingBooks(searchingData) {
     try {
-      let enteredData = searchingData.search
+      let enteredData = searchingData.search;
       let findingQuery = {
-        $and: [{
-          $or:
-            [
-              { 'bookName': { $regex: enteredData, $options: 'i' } },
-              { 'description': { $regex: enteredData, $options: 'i' } },
-              { 'authorName': { $regex: enteredData, $options: 'i' } },
-              { 'price': { $regex: enteredData } },
-              { 'quantity': { $regex: enteredData } }
-            ]
-        }]
-      }
-      let searchResultArray = await bookModel.searchingBooks(findingQuery)
+        $or: [
+          { bookName: { $regex: enteredData, $options: "i" } },
+          { description: { $regex: enteredData, $options: "i" } },
+          { authorName: { $regex: enteredData, $options: "i" } },
+          { price: { $regex: enteredData } },
+          { quantity: { $regex: enteredData } },
+        ],
+      };
+      let searchQuery = { findingQuery };
+      let searchResultArray = await bookModel.searchingBooks(searchQuery);
       logger.info("Result of searching --> ", searchResultArray);
 
       if (searchResultArray.length > 0) {
-        return { "success": true, "message": "ALL books FOUND !", "data": searchResultArray }
+        return {
+          success: true,
+          message: "ALL books FOUND !",
+          data: searchResultArray,
+        };
       } else {
-        return { "success": false, "message": "NO books FOUND !", "data": searchResultArray }
+        return {
+          success: false,
+          message: "NO books FOUND !",
+          data: searchResultArray,
+        };
       }
-
     } catch (error) {
       logger.error(error);
-      let response = {}
-      response.success = false
-      response.message = `ERROR IN SERVICE`
-      response.error = error
-      return response
+      let response = {};
+      response.success = false;
+      response.message = `ERROR IN SERVICE`;
+      response.error = error;
+      return response;
     }
   }
-}
+};

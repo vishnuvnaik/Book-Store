@@ -1,13 +1,17 @@
-const adminServices = require("../services/adminServices");
-const logger = require("../config/logger")
+const Service = require("../services/adminServices");
+const adminServices = new Service();
+const logger = require("../config/logger");
 module.exports.addBookController = (req, res) => {
   let response = {};
   try {
-    req.checkBody("authorName", "Author should not be empty").notEmpty();
-    req.checkBody("genre", "genre should not be empty").notEmpty();
+    req
+      .checkBody("authorName", "Author should not be empty")
+      .notEmpty()
+      .isAlpha();
+    req.checkBody("genre", "genre should not be empty").notEmpty().isAlpha();
     req.checkBody("bookName", "bookname should not be empty").notEmpty();
-    req.checkBody("quantity", "Quantity should not be empty").notEmpty().isNumeric();
-    req.checkBody("price", "Price should not be empty").notEmpty().isNumeric();
+    req.checkBody("quantity", "Quantity should not be empty").isNumeric();
+    req.checkBody("price", "Price should not be empty").isNumeric();
     req.checkBody("description", "Description should not be empty").notEmpty();
 
     let error = req.validationErrors();
@@ -24,6 +28,7 @@ module.exports.addBookController = (req, res) => {
         price: req.body.price,
         description: req.body.description,
         bookName: req.body.bookName,
+        userId: req.decoded.payload.id,
       };
 
       adminServices
@@ -50,8 +55,11 @@ module.exports.addBookController = (req, res) => {
 module.exports.getBooks = (req, res) => {
   let response = {};
   let find = {};
+
   let getBooks = {
     find,
+    pageNo: req.body.pageNo,
+    size: req.body.size,
   };
   try {
     adminServices
@@ -70,9 +78,7 @@ module.exports.getBooks = (req, res) => {
         res.status(500).send({ data: response });
       });
   } catch (err) {
-    response.success = false;
-    response.error = err;
-    return res.status(500).send(response);
+    this.errorHandling(err);
   }
 };
 module.exports.updateBooks = (req, res) => {
@@ -108,7 +114,7 @@ module.exports.updateBooks = (req, res) => {
         });
     }
   } catch (err) {
-    console.log(err);
+    this.errorHandling(err);
   }
 };
 module.exports.deleteBook = (req, res) => {
@@ -129,14 +135,46 @@ module.exports.deleteBook = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.kind === "ObjectId") {
-        response.success = false;
-        response.message = "Inputted an invalid BookID = " + req.params._id;
-        res.status(404).send({ data: response });
-      } else {
-        response.success = false;
-        response.message = err;
-        res.status(500).send({ data: response });
-      }
+      this.errorHandling(err);
     });
+};
+module.exports.searchingBooks = async (req, res) => {
+  try {
+    //what is to be searched has to be mentioned , you cant leave it empty
+    req.checkBody("search", "SEARCH FIELD SHOULD NOT BE EMPTY").notEmpty();
+    let errorsGenerated = req.validationErrors();
+    let response = {};
+    if (errorsGenerated) {
+      response.success = false;
+      response.message = "Errors are generated in the request ! ";
+      response.error = errorsGenerated;
+      return res.status(422).send(response);
+    } else {
+      let result = await adminServices.searchingBooks(req.body);
+      if (result.success) {
+        res.status(200).send(result); // OK
+      } else {
+        res.status(404).send(result); // NOT FOUND
+      }
+    }
+  } catch (error) {
+    this.errorHandling(err);
+  }
+};
+
+module.exports.errorHandling = (err) => {
+  logger.error(err);
+  if (
+    err instanceof SyntaxError ||
+    err instanceof EvalError ||
+    err instanceof RangeError ||
+    err instanceof ReferenceError ||
+    err instanceof TypeError
+  ) {
+    logger.error("Programming Error", err);
+    return res.status(500).send(err);
+  } else {
+    logger.warn("UserDefined", err);
+    //result.message = err.message.toString();
+  }
 };

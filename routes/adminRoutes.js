@@ -20,5 +20,5 @@ router.delete(
   authenticate.checkTokenAuth,
   adminController.deleteBook
 );
-router.post('/search', adminController.searchingBooks)
+router.post("/search", adminController.searchingBooks);
 module.exports = router;
