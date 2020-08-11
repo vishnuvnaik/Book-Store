@@ -64,7 +64,7 @@ module.exports = class AdminServices {
               let key = "books1234";
               let redisResult = redisDb.setCache(key, JSON.stringify(data))
               logger.info('redis result ', redisResult)
-              return { "success": true, "message": "ALL NOTES LOADED SUCCESSFULLY !", "data": notesResult }
+              return { "success": true, "message": "ALL BOOKS LOADED SUCCESSFULLY !", "data": data }
             }
             else {
               reject(err)
@@ -115,13 +115,12 @@ module.exports = class AdminServices {
             ]
         }]
       }
-      //firstly in the notes schema searching is done
       let searchResultArray = await bookModel.searchingBooks(findingQuery)
-      logger.info("\n\n\tResult of searching --> ", searchResultArray);
+      logger.info("Result of searching --> ", searchResultArray);
 
       if (searchResultArray.length > 0) {
         return { "success": true, "message": "ALL books FOUND !", "data": searchResultArray }
-      } else {                    //no labels are found 
+      } else {
         return { "success": false, "message": "NO books FOUND !", "data": searchResultArray }
       }
 

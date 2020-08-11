@@ -63,43 +63,4 @@ class RedisService {
 
 }
 module.exports = new RedisService;
-// var redis = require('redis');
-// var client = redis.createClient();
 
-// client.on('connect', function () {
-//     console.log('connected redis');
-// });
-// var query = "booksincache"
-
-// exports.redisgetBooks = (userId, callback) => {
-//     client.get(`notes : ${query + userId}`, (err, data) => {
-//         if (err) {
-//             callback(err)
-//         }
-//         else {
-//             callback(null, data)
-//         }
-//     })
-// }
-
-
-// exports.redissetBooks = (userId, books) => {
-//     client.set(`notes : ${query + userId}`, JSON.stringify({
-//         from: "cache memory",
-//         books
-//     }))
-// }
-
-
-// exports.redisdeleteBooks = (userId) => {
-//     client.del(`notes : ${query + userId}`, JSON.stringify({
-//         from: "cache memory",
-//     }), (err, data) => {
-//         if (err) {
-//             console.log("eroor");
-//         }
-//         else {
-//             console.log("deleted", data)
-//         }
-//     })
-// }
