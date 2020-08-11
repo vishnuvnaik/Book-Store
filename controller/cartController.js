@@ -1,5 +1,5 @@
 const cartServices = require("../services/cartServices");
-const logger = require("../config/logger")
+const logger = require("../config/logger");
 
 module.exports.addToCart = (req, res) => {
   let response = {};
@@ -50,7 +50,6 @@ module.exports.getAllItemsFromCart = (req, res) => {
       response.success = true;
       response.data = data;
       res.status(200).send({ data: response });
-
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
@@ -63,11 +62,9 @@ module.exports.getAllItemsFromCart = (req, res) => {
         res.status(500).send({ data: response });
       }
     });
-
 };
 module.exports.updateCart = (req, res) => {
   let response = {};
-
 
   req.checkBody("quantity", "quantity is invalid").isNumeric();
   let errors = req.validationErrors();

@@ -1,10 +1,9 @@
 const userService = require("../services/userServices");
 const token = require("../middleware/token");
-const logger = require("../config/logger")
+const logger = require("../config/logger");
 const mailer = require("../middleware/sendMail");
 
 module.exports.register = (req, res) => {
-
   try {
     req
       .checkBody("firstName", "firstname not valid ")
@@ -42,12 +41,16 @@ module.exports.register = (req, res) => {
     }
   } catch (err) {
     logger.error(err);
-    if (err instanceof TypeError ||
-      err instanceof ReferenceError) {
+    if (
+      err instanceof TypeError ||
+      err instanceof ReferenceError ||
+      err instanceof SyntaxError ||
+      err instanceof RangeError ||
+      err instanceof EvalError
+    ) {
       logger.error("programming error:", err);
-    }
-    else {
-      logger.warn('user defined error:', err);
+    } else {
+      logger.warn("user defined error:", err);
     }
   }
 };
@@ -84,7 +87,19 @@ module.exports.login = (req, res) => {
       }
     });
   } catch (err) {
-    console.log("error in login controller", err);
+    logger.error(err);
+    if (
+      err instanceof TypeError ||
+      err instanceof ReferenceError ||
+      err instanceof SyntaxError ||
+      err instanceof RangeError ||
+      err instanceof EvalError
+    ) {
+      logger.error("programming error:", err);
+    } else {
+      logger.warn("user defined error:", err);
+    }
+    next();
   }
 };
 
@@ -98,8 +113,7 @@ module.exports.forgotPassword = (req, res) => {
       response.message = { message: "Invalid Input" };
       response.error = errors;
       return res.status(422).send(response);
-    }
-    else {
+    } else {
       userService.forgotPassword(req.body, (err, data) => {
         var responses = {};
         if (err) {
@@ -120,8 +134,19 @@ module.exports.forgotPassword = (req, res) => {
         }
       });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    logger.error(err);
+    if (
+      err instanceof TypeError ||
+      err instanceof ReferenceError ||
+      err instanceof SyntaxError ||
+      err instanceof RangeError ||
+      err instanceof EvalError
+    ) {
+      logger.error("programming error:", err);
+    } else {
+      logger.warn("user defined error:", err);
+    }
   }
 };
 
@@ -152,6 +177,17 @@ module.exports.resetPassword = (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
+    logger.error(err);
+    if (
+      err instanceof TypeError ||
+      err instanceof ReferenceError ||
+      err instanceof SyntaxError ||
+      err instanceof RangeError ||
+      err instanceof EvalError
+    ) {
+      logger.error("programming error:", err);
+    } else {
+      logger.warn("user defined error:", err);
+    }
   }
 };
