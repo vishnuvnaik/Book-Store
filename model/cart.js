@@ -21,26 +21,24 @@ var cartSchema = new mongoSchema(
   }
 );
 var Cart = mongoose.model("Cart", cartSchema);
-function cartModel() { }
+function cartModel() {}
 cartModel.prototype.addToCart = (req) => {
   let cartAdd = new Cart(req);
-  return cartAdd.save()
-
-}
+  return cartAdd.save();
+};
 cartModel.prototype.getAllItemsFromCart = (field) => {
   if (field.match(/^[0-9a-fA-F]{24}$/)) {
-    return Cart.find({ user_id: field })
+    return Cart.find({ user_id: field });
+  } else {
+    //need to write code here
   }
-  else {
-    //need to write code here 
-  }
-
 };
 cartModel.prototype.getItemsByUserProduct = (field) => {
-  return Cart
-    .find({ user_id: field.user_id })
-    .populate("product_id", "price quantity");
-}
+  return Cart.find({ user_id: field.user_id }).populate(
+    "product_id",
+    "price quantity"
+  );
+};
 
 // try {
 //   return new Promise((resolve, reject) => {
@@ -60,11 +58,9 @@ cartModel.prototype.getItemsByUserProduct = (field) => {
 //};
 
 cartModel.prototype.updateCart = (_id, req) => {
-  return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false })
+  return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false });
 };
 cartModel.prototype.removeFromCart = (_id) => {
-
-  return Cart.findByIdAndRemove(_id, { useFindAndModify: false })
-
+  return Cart.findByIdAndRemove(_id, { useFindAndModify: false });
 };
 module.exports = new cartModel();
