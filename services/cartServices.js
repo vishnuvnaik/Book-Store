@@ -2,15 +2,15 @@ const cartModel = require("../model/cart");
 const bookModel = require("../model/admin");
 
 module.exports.addToCart = (req) => {
-  let productId = { product_id: req.product_id }
+  let productId = { product_id: req.product_id };
   try {
     return new Promise((resolve, reject) => {
-      bookModel.getAvailableBooks(productId)
+      bookModel
+        .getAvailableBooks(productId)
         .then((data) => {
           if (data == null) {
-            reject("Book is not available")
-          }
-          else if (data.quantity > req.quantity) {
+            reject("Book is not available");
+          } else if (data.quantity > req.quantity) {
             cartModel
               .addToCart(req)
               .then((data) => {
@@ -18,22 +18,20 @@ module.exports.addToCart = (req) => {
               })
               .catch((err) => {
                 reject(err);
-              })
+              });
+          } else {
+            reject("Quantity is not available");
           }
-          else {
-            reject("Quantity is not available")
-          }
-        }).catch((err) => {
-          reject(err);
         })
-    })
-
+        .catch((err) => {
+          reject(err);
+        });
+    });
   } catch (err) {
     return err;
   }
 };
 module.exports.getAllItemsFromCart = (req) => {
-
   try {
     return new Promise((resolve, reject) => {
       cartModel
@@ -41,21 +39,20 @@ module.exports.getAllItemsFromCart = (req) => {
         .then((data) => {
           if (data.length == 0) {
             resolve({ message: "No books are found in this user id" });
-          }
-          else {
+          } else {
             resolve(data);
           }
         })
         .catch((err) => reject(err));
     });
   } catch (err) {
-    return err
+    return err;
   }
 };
 module.exports.updateCart = (_id, req) => {
   let productId = {
-    product_id: req.product_id
-  }
+    product_id: req.product_id,
+  };
   try {
     return new Promise((resolve, reject) => {
       bookModel.getAvailableBooks(productId).then((data) => {
@@ -69,15 +66,14 @@ module.exports.updateCart = (_id, req) => {
               reject(err);
             });
         } else {
-          reject("Quantity is not available")
+          reject("Quantity is not available");
         }
-      })
-    })
+      });
+    });
   } catch (err) {
     return err;
   }
-
-}
+};
 module.exports.removeFromCart = (_id) => {
   return new Promise((resolve, reject) => {
     cartModel
