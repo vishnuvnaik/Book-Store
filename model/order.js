@@ -8,10 +8,6 @@ var orderSchema = new mongoSchema(
             required: true,
             ref: "user",
         },
-        // totalAmount: {
-        //     type: Number,
-        //     required: true,
-        // },
         shippingAddress: {
             type: mongoSchema.Types.ObjectId,
             required: true,
