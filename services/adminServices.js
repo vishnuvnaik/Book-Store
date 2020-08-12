@@ -25,7 +25,7 @@ module.exports = class AdminServices {
           .then((data) => {
             resolve(data);
 
-            if (data !== null) {
+            if (data !== null && data.length <= 0) {
               let refreshResult = this.refreshRedis(uniqueId);
               if (refreshResult) {
                 logger.info(`Redis refreshed !`);
@@ -80,6 +80,7 @@ module.exports = class AdminServices {
           logger.info(
             `A request is being made with pagination ! Page no - ${pageNo} , Size - ${size}`
           );
+
           let parsedResult = JSON.parse(result);
           logger.info("All books --->", parsedResult);
           //slice used for pagination
@@ -87,12 +88,13 @@ module.exports = class AdminServices {
             (pageNo - 1) * size,
             pageNo * size
           ); //range is set here
-          if (sliceResult) {
-            logger.info("Redis result", JSON.parse(sliceResult));
+
+          if (sliceResult.length > 0) {
+            logger.info("Redis result", sliceResult);
             return {
               success: true,
               message: "ALL Books LOADED SUCCESSFULLY !",
-              data: JSON.parse(sliceResult),
+              data: sliceResult,
             };
           }
         }
@@ -101,7 +103,6 @@ module.exports = class AdminServices {
           bookModel
             .getBooks(findQuery)
             .then((data) => {
-              resolve(data);
               if (data.length > 0) {
                 let key = "books1234";
                 let redisResult = redisDb.setCache(key, JSON.stringify(data));
@@ -150,12 +151,16 @@ module.exports = class AdminServices {
     try {
       let enteredData = searchingData.search;
       let findingQuery = {
-        $or: [
-          { bookName: { $regex: enteredData, $options: "i" } },
-          { description: { $regex: enteredData, $options: "i" } },
-          { authorName: { $regex: enteredData, $options: "i" } },
-          { price: { $regex: enteredData } },
-          { quantity: { $regex: enteredData } },
+        $and: [
+          {
+            $or: [
+              { bookName: { $regex: new RegExp(enteredData) } },
+              { description: { $regex: new RegExp(enteredData) } },
+              { authorName: { $regex: new RegExp(enteredData) } },
+              // { price: { $regex: enteredData } },
+              // { quantity: { $regex: enteredData } },
+            ],
+          },
         ],
       };
       let searchQuery = { findingQuery };
