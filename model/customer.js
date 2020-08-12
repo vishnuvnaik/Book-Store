@@ -58,5 +58,8 @@ customerDetailsModel.prototype.addDetails = (req) => {
 customerDetailsModel.prototype.findDetails = (req) => {
   return customerDetails.find(req).populate("addressType");
 };
+customerDetailsModel.prototype.find = (req) => {
+  return customer.findOne(req);
+};
 
 module.exports = new customerDetailsModel();

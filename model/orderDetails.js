@@ -13,10 +13,7 @@ var orderDetailsSchema = new mongoSchema(
       required: true,
       ref: "users",
     },
-    totalAmount: {
-      type: Number,
-      required: true,
-    },
+    
     quantity: {
       type: Number,
       required: true,

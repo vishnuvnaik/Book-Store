@@ -16,3 +16,19 @@ module.exports.addAddress = (req) => {
     return err;
   }
 };
+module.exports.getCustomerById = (req) => {
+  try {
+    return new Promise((resolve, reject) => {
+      addressModel
+        .find(req)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  } catch (err) {
+    return err;
+  }
+};

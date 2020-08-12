@@ -13,6 +13,10 @@ var orderSchema = new mongoSchema(
       required: true,
       ref: "customer",
     },
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
     order_date: {
       type: Date,
       default: Date.now,

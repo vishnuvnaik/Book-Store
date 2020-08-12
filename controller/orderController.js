@@ -19,8 +19,6 @@ module.exports.addOrder = (req, res) => {
     } else {
       let filterData = {
         user_id: req.decoded.payload.id,
-        shippingAddress: req.params._id,
-        product_id: req.headers.product_id,
       };
       orderServices
         .addOrder(filterData)

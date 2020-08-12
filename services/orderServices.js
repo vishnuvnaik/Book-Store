@@ -2,112 +2,107 @@ const orderModel = require("../model/order");
 const cartModel = require("../model/cart");
 const bookModel = require("../model/admin");
 const orderDetails = require("../model/orderDetails");
-
+const customerService = require("../services/customerServices.js");
 module.exports = class OrderServices {
   addOrder(req) {
     try {
       return new Promise((resolve, reject) => {
-        cartModel.getAllItemsFromCart(req.user_id).then((data) => {
-          if (data.length <= 0) {
-            reject("Cart is empty for this user");
-          } else if (data.length > 0) {
-            this.addOrderDetails(req)
-              .then((data) => {
-                resolve(data);
-              })
-              .catch((err) => {
-                reject(err);
+        cartModel
+          .getAllItemsFromCart({ user_id: req.user_id })
+          .then((data1) => {
+            let customerdetail = {
+              user_id: req.user_id,
+            };
+            let sum = 0;
+            if (data1.length > 0) {
+              let cartdetails = data1.filter((data1) => {
+                if (data1.isActive === true) {
+                  sum = sum + data1.quantity * data1.product_id.price;
+                  return data1;
+                }
+                return null;
               });
-          } else if (data == null) {
-            reject("user id not found,try again");
-          }
-        });
+              if (cartdetails.length != 0) {
+                this.addOrderDetails(customerdetail, cartdetails, sum, req)
+                  .then((data) => {
+                    resolve(data);
+                  })
+                  .catch((err) => {
+                    reject(err);
+                  });
+              } else {
+                reject({ message: "No Product in cart" });
+              }
+            } else {
+              reject({ message: "No Product in cart" });
+            }
+          })
+          .catch((err) => {
+            reject(err);
+          });
       });
     } catch (err) {
       return err;
     }
   }
-  addOrderDetails(req) {
+  addOrderDetails(customerdetail, cartdetails, sum, req) {
     try {
       return new Promise((resolve, reject) => {
-        orderModel
-          .addOrder(req)
+        customerService
+          .getCustomerById(customerdetail)
           .then((data) => {
-            const order_id = data._id;
-            {
-              cartModel
-                .getItemsByUserProduct(req)
-                .then((data) => {
-                  let sum = 0;
-                  let cartdetails = data.filter((data) => {
-                    if (data.isActive === true) {
-                      sum = sum + data.quantity * data.product_id.price;
-                      return data;
-                    } else {
-                      reject({
-                        message: "No active products in cart are avaliable",
-                      });
-                    }
-                  });
-
-                  if (data.length <= 0) {
-                    resolve({ message: "cart is empty", data: data });
-                  } else if (data !== null) {
-                    bookModel.getAvailableBooks(req).then((data) => {
-                      if (data !== null) {
-                        let totalAmount = sum;
-                        cartdetails.forEach((cartdetails) => {
-                          let filterData = {
-                            order_id: order_id,
-                            product_id: cartdetails.product_id._id,
-                            totalAmount: totalAmount,
-                            quantity: cartdetails.quantity,
-                          };
-                          orderDetails
-                            .placeOrder(filterData)
+            let filterData = {
+              user_id: req.user_id,
+              totalAmount: sum,
+              shippingAddress: data._id,
+            };
+            orderModel
+              .addOrder(filterData)
+              .then((data1) => {
+                cartdetails.forEach((cartdetails) => {
+                  let detail = {
+                    order_id: data1._id,
+                    product_id: cartdetails.product_id._id,
+                    quantity: cartdetails.quantity,
+                  };
+                  orderDetails
+                    .placeOrder(detail)
+                    .then((data) => {
+                      let isactive = {
+                        $set: { isActive: false },
+                      };
+                      let quantityStock =
+                        cartdetails.product_id.quantity - cartdetails.quantity;
+                      let updatequantity = {
+                        quantity: quantityStock,
+                      };
+                      cartModel
+                        .updateCart(cartdetails._id, isactive)
+                        .then((data) => {
+                          bookModel
+                            .updateBook(
+                              cartdetails.product_id._id,
+                              updatequantity
+                            )
                             .then((data) => {
-                              resolve(data);
-                              let req = { isActive: false };
-                              let req1 = cartdetails.product_id.quantity;
-                              let req2 = cartdetails.quantity;
-                              let req3 = req1 - req2;
-                              let quantityBody = { quantity: req3 };
-                              cartModel
-                                .updateCart(cartdetails.id, req)
-                                .then((data) => {
-                                  resolve(data);
-                                })
-                                .catch((err) => {
-                                  reject(err);
-                                });
-                              bookModel
-                                .updateBook(
-                                  cartdetails.product_id._id,
-                                  quantityBody
-                                )
-                                .then((data) => {
-                                  resolve(data);
-                                })
-                                .catch((err) => {
-                                  reject(err);
-                                });
+                              resolve(data1);
                             })
                             .catch((err) => {
                               reject(err);
                             });
+                        })
+                        .catch((err) => {
+                          reject(err);
                         });
-                      } else {
-                        reject({ message: "error in placing order,retry" });
-                      }
+                    })
+                    .catch((err) => {
+                      reject(err);
                     });
-                  } else {
-                    reject({ message: "cart is empty" });
-                  }
-                })
-                .catch((err) => {
-                  reject(err);
                 });
-            }
+              })
+              .catch((err) => {
+                reject(err);
+              });
           })
           .catch((err) => {
             reject(err);
