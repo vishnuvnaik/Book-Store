@@ -30,6 +30,9 @@
         "email": "vishnu@gmail.com",
         "password": "qwqwertyuiop"
     },
+    "loginWrong6": {
+        "email": "vishnu@gmail.com"
+    },
     "forgotPassword": {
         "email": "vishnuvdev17@gmail.com"
     },
@@ -68,11 +71,16 @@
         "email": "@.com",
         "password": ""
     },
+    "registerwrong5": {
+        "lastName": "",
+        "email": "mail@mail.com",
+        "password": "wertyuiopfgh"
+    },
     "forgotpasswordwrong": {
         "email": "vishnu"
     },
     "forgotpasswordwrong1": {
-        "email": "vishnu@mailmail.com"
+        "email": "vishnu@mail.com"
     },
     "resetpasswordwrong": {
         "password": "ppp",
