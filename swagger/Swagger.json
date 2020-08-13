@@ -1,0 +1,546 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Book Store Swagger",
+        "description": "This is a book store swagger to access rest API server ",
+        "license": {
+            "name": "MIT",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host": "localhost:5001",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Users",
+            "description": "API for users in the system"
+        },
+        {
+            "name": "Books",
+            "description": "API for books in the system"
+        },
+        {
+            "name": "Cart",
+            "description": "API for cart in the system"
+        },
+        {
+            "name": "Order",
+            "description": "API for order in the system"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "securityDefinitions": {
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "Create new user in system",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/register"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/register"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "Find user in system",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Get the user",
+                        "schema": {
+                            "$ref": "#/definitions/login"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/forgotPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "Find user email in system to forgot password",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Get the user email",
+                        "schema": {
+                            "$ref": "#/definitions/forgotPassword"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/resetPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "To update password of user",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Update password of given email id",
+                        "schema": {
+                            "$ref": "#/definitions/resetpassword"
+                        }
+                    },
+                    {
+                        "name": "Auth",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/resetpassword"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "security": {
+                    "Token": []
+                },
+                "responses": {}
+            }
+        },
+        "/books/": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "description": "get books from the db",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "description": "Get the books",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "description": "get books from the db",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "description": "Input the book details",
+                        "schema": {
+                            "$ref": "#/definitions/books"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/books/{_id}": {
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "description": "get books from the db",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "description": "Get the books",
+                        "schema": {
+                            "$ref": "#/definitions/books"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "Input a valid id",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "description": "get books from the db",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "description": "Get the books",
+                        "schema": {
+                            "$ref": "#/definitions/books"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "Input a valid id",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/cart/": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "description": "get cart for the user id inputted",
+                "parameters": [
+                    {
+                        "name": "cart",
+                        "in": "body",
+                        "description": "Get the items from cart",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/cart/{_id}": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "description": "Add item/items to the cart",
+                "parameters": [
+                    {
+                        "name": "Cart",
+                        "in": "body",
+                        "description": "Input the quantity of item",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "Input a valid product id ",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            },
+            "put": {
+                "tags": [
+                    "Cart"
+                ],
+                "description": "update books in the cart",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "body",
+                        "description": "Update the product in cart",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "product_id",
+                        "in": "header",
+                        "description": "Input a valid product id",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "Input a valid cart id",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "description": "delete cart for the user",
+                "parameters": [
+                    {
+                        "name": "deleteCart",
+                        "in": "body",
+                        "description": "Delete cart",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    },
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "Input a valid cart id",
+                        "schema": {
+                            "$ref": "#/definitions/"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        },
+        "/placeOrder/": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "description": "Place the order",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "Input a valid token",
+                        "schema": {
+                            "$ref": "#/definitions/order"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "register": {
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "firstName": "Vishnu",
+                "lastName": "Dev",
+                "password": "Vishnu@35",
+                "email": "vishnuvishnu@gmail.com",
+                "role": "user"
+            }
+        },
+        "login": {
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "email": "vishnuvishnu@gmail.com",
+                "password": "Vishnu@35"
+            }
+        },
+        "forgotPassword": {
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "email": "vishnuvishnu@gmail.com"
+            }
+        },
+        "resetpassword": {
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "confirmpassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "books": {
+            "properties": {
+                "bookName": {
+                    "type": "string"
+                },
+                "authorName": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "genre": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "bookName": "Binods biography",
+                "authorName": "Binod",
+                "genre": "science",
+                "price": "450",
+                "quantity": "2",
+                "description": "this is a book"
+            }
+        }
+    },
+    "User": {
+        "type": "object",
+        "$ref": "#/definitions/User"
+    }
+}

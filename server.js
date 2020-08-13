@@ -12,8 +12,8 @@ const customerRouter = require("./routes/customerRoutes");
 const orderRouter = require("./routes/orderRoutes");
 const logger = require("./config/logger");
 const customer = require("./model/customer.js");
-
-
+const swaggerDocument = require("./swagger/swagger.json");
+const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
 //create express app
@@ -28,11 +28,21 @@ app.use("/", adminRouter);
 app.use("/", cartRouter);
 app.use("/", customerRouter);
 app.use("/", orderRouter);
-
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.listen(process.env.PORT, () => {
 //   logger.info(`server is listening to ${process.env.PORT}`);
 // })
+app.use(function (err, req, res, next) {
+  var error = {
+    status: false,
+    status_code: 500,
+    message:
+      "Something bad happened. Please contact system administrator or try again",
+  };
+  res.send(error);
+});
+
 const server = app.listen(process.env.PORT, () => {
   logger.info("server listening on port ", process.env.PORT);
   dbConfig.dbConnection();
