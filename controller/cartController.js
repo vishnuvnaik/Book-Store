@@ -1,6 +1,6 @@
 const cartServices = require("../services/cartServices");
 const logger = require("../config/logger");
-
+const constantsParam = require("../constants/static");
 module.exports.addToCart = (req, res) => {
   let response = {};
   try {
@@ -12,7 +12,7 @@ module.exports.addToCart = (req, res) => {
       return res.status(422).send(response);
     } else {
       let filterData = {
-        user_id: req.headers.user_id,
+        user_id: req.decoded.payload.id,
         product_id: req.params._id,
         quantity: req.body.quantity,
       };
@@ -22,7 +22,11 @@ module.exports.addToCart = (req, res) => {
           response.success = true;
           //  response.data = data;
           response.message = "Quantity is available,Book added to cart";
-          res.status(200).send({ data: response });
+          res
+            .status(
+              constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+            )
+            .send({ data: response });
         })
         .catch((err) => {
           console.log(err);
@@ -40,8 +44,9 @@ module.exports.addToCart = (req, res) => {
 module.exports.getAllItemsFromCart = (req, res) => {
   let response = {};
   var id = {
-    userId: req.params._id,
+    userId: req.decoded.payload.id,
   };
+  console.log(id.userId);
 
   cartServices
     .getAllItemsFromCart(id.userId)
@@ -49,7 +54,9 @@ module.exports.getAllItemsFromCart = (req, res) => {
       response.message = "Cart details retreived";
       response.success = true;
       response.data = data;
-      res.status(200).send({ data: response });
+      res
+        .status(constantsParam.staticHTTPSuccessMessages.OK.successResponseCode)
+        .send({ data: response });
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
@@ -84,7 +91,11 @@ module.exports.updateCart = (req, res) => {
         response.success = true;
         response.data = data;
         response.message = "Cart Updated Successfully";
-        res.status(200).send({ data: response });
+        res
+          .status(
+            constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+          )
+          .send({ data: response });
       })
       .catch((err) => {
         if (err.kind === "ObjectId") {

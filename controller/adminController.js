@@ -1,6 +1,7 @@
 const Service = require("../services/adminServices");
 const adminServices = new Service();
 const logger = require("../config/logger");
+const constantsParam = require("../constants/static");
 module.exports.addBookController = (req, res) => {
   let response = {};
   try {
@@ -19,7 +20,12 @@ module.exports.addBookController = (req, res) => {
       response.success = false;
       response.message = { error };
 
-      return res.status(422).send(response);
+      return res
+        .status(
+          constantsParam.staticHTTPErrorMessages.UNPROCESSABLE_ENTITY
+            .errorResponseMessage
+        )
+        .send({ data: response });
     } else {
       let filterData = {
         authorName: req.body.authorName,
@@ -37,7 +43,11 @@ module.exports.addBookController = (req, res) => {
           response.success = true;
           response.data = data;
           response.message = "Book added  Successfully";
-          res.status(200).send({ data: response });
+          res
+            .status(
+              constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+            )
+            .send({ data: response });
         })
         .catch((err) => {
           console.log(err);
@@ -69,7 +79,11 @@ module.exports.getBooks = (req, res) => {
         response.data = data;
         response.message = "Book details retrieved";
         logger.info("books retreived");
-        res.status(200).send({ data: response });
+        res
+        .status(
+          constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+        )
+        .send({ data: response });
       })
       .catch((err) => {
         console.log(err);

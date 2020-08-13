@@ -35,7 +35,7 @@ module.exports.getAllItemsFromCart = (req) => {
   try {
     return new Promise((resolve, reject) => {
       cartModel
-        .getAllItemsFromCart(req)
+        .getAllItemsFromCart({ user_id: req })
         .then((data) => {
           if (data.length == 0) {
             resolve({ message: "No books are found in this user id" });

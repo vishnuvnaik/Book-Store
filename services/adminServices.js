@@ -77,13 +77,7 @@ module.exports = class AdminServices {
           // request with page no and size
           let pageNo = parseInt(req.pageNo);
           let size = parseInt(req.size);
-          logger.info(
-            `A request is being made with pagination ! Page no - ${pageNo} , Size - ${size}`
-          );
-
           let parsedResult = JSON.parse(result);
-          logger.info("All books --->", parsedResult);
-          //slice used for pagination
           let sliceResult = await parsedResult.slice(
             (pageNo - 1) * size,
             pageNo * size

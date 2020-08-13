@@ -11,7 +11,7 @@ router.post(
   cartController.addToCart
 );
 router.get(
-  "/cart/:_id",
+  "/cart/",
   authenticate.checkTokenAuth,
   cartController.getAllItemsFromCart
 );

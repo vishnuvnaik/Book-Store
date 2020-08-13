@@ -37,22 +37,6 @@ cartModel.prototype.getItemsByUserProduct = (field) => {
   );
 };
 
-// try {
-//   return new Promise((resolve, reject) => {
-//     Cart.find({ user_id: field.user_id, product_id: field.product_id })
-//       .then((data) => {
-//         resolve({ data });
-//       })
-//       .catch((err) => {
-//         reject({ error: err });
-//       });
-//   });
-// }
-// catch (err) {
-//   console.log(err)
-// }
-
-//};
 
 cartModel.prototype.updateCart = (_id, req) => {
   return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false });

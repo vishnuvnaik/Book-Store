@@ -44,7 +44,11 @@ module.exports.addAddress = (req, res) => {
           response.success = true;
           response.data = data;
           response.message = "Address added  Successfully";
-          res.status(200).send({ data: response });
+          res
+          .status(
+            constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+          )
+          .send({ data: response });
         })
         .catch((err) => {
           response.success = false;
