@@ -20,23 +20,21 @@ var cartSchema = new mongoSchema(
     timestamps: true,
   }
 );
-var Cart = mongoose.model("Cart", cartSchema);
+var cartsModel = mongoose.model("Cart", cartSchema);
 function cartModel() {}
 cartModel.prototype.addToCart = (req) => {
-  let cartAdd = new Cart(req);
+  let cartAdd = new cartsModel(req);
   return cartAdd.save();
 };
 cartModel.prototype.getAllItemsFromCart = (field) => {
-  return Cart.find(field).populate("product_id", "title price quantity");
+  return cartsModel.find(field).populate("product_id", "title price quantity");
 };
 
 cartModel.prototype.getItemsByUserProduct = (field) => {
-  return Cart.find({ user_id: field.user_id }).populate(
-    "product_id",
-    "price quantity"
-  );
+  return cartsModel
+    .find({ user_id: field.user_id })
+    .populate("product_id", "price quantity");
 };
-
 
 cartModel.prototype.updateCart = (_id, req) => {
   return Cart.findByIdAndUpdate(_id, req, { useFindAndModify: false });

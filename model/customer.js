@@ -48,18 +48,18 @@ var customerDetails = new mongoSchema(
   }
 );
 
-var customer = mongoose.model("customer", customerDetails);
+var customerModel = mongoose.model("customer", customerDetails);
 function customerDetailsModel() {}
 customerDetailsModel.prototype.addDetails = (req) => {
-  let cartAdd = new customer(req);
+  let cartAdd = new customerModel(req);
   return cartAdd.save();
 };
 
 customerDetailsModel.prototype.findDetails = (req) => {
-  return customerDetails.find(req).populate("addressType");
+  return customerModel.find(req).populate("addressType");
 };
 customerDetailsModel.prototype.find = (req) => {
-  return customer.findOne(req);
+  return customerModel.findOne(req);
 };
 
 module.exports = new customerDetailsModel();

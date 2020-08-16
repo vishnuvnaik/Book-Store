@@ -26,10 +26,10 @@ var orderSchema = new mongoSchema(
     timestamps: true,
   }
 );
-var Order = mongoose.model("Order", orderSchema);
+var ordersModel = mongoose.model("Order", orderSchema);
 function orderModel() {}
 orderModel.prototype.addOrder = (req) => {
-  let orderAdd = new Order(req);
+  let orderAdd = new ordersModel(req);
   return orderAdd.save();
 };
 module.exports = new orderModel();

@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-var bcrypt = require("bcrypt");
-var ObjectID = require("mongodb").ObjectID;
 // create instance of Schema
 var mongoSchema = mongoose.Schema;
 var registrationSchema = new mongoSchema(
@@ -21,9 +19,9 @@ var registrationSchema = new mongoSchema(
   }
 );
 function usermodel() {}
-var user = mongoose.model("user", registrationSchema);
+var userSchema = mongoose.model("user", registrationSchema);
 usermodel.prototype.finduser = (body, callback) => {
-  user.find({ email: body.email }, (err, data) => {
+  userSchema.find({ email: body.email }, (err, data) => {
     if (err) {
       console.log("Error in register user schema ");
       return callback(err);
@@ -34,7 +32,7 @@ usermodel.prototype.finduser = (body, callback) => {
 };
 
 usermodel.prototype.createUser = (body, callback) => {
-  const newUser = new user(body);
+  const newUser = new userSchema(body);
   newUser.save((err, result) => {
     if (err) {
       console.log("error in model file", err);
@@ -46,7 +44,7 @@ usermodel.prototype.createUser = (body, callback) => {
   });
 };
 usermodel.prototype.update = (req, encrypted, callback) => {
-  user.updateOne(
+  userSchema.updateOne(
     {
       _id: req.decoded.data_id,
     },

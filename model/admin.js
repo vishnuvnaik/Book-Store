@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 var mongoSchema = mongoose.Schema;
-const logger = require("../config/logger");
 var adminSchema = new mongoSchema(
   {
     bookName: {
@@ -38,45 +37,31 @@ var adminSchema = new mongoSchema(
     timestamps: true,
   }
 );
-var Books = mongoose.model("Books", adminSchema);
+var booksModel = mongoose.model("Books", adminSchema);
 
 function bookModel() {}
 
 bookModel.prototype.addBooks = (req) => {
-  let bookAdd = new Books(req);
+  let bookAdd = new booksModel(req);
   return bookAdd.save();
 };
 bookModel.prototype.getBooks = (field) => {
-  return Books.find(field.find);
+  return booksModel.find(field.find);
 };
 
 bookModel.prototype.getAvailableBooks = (field) => {
-  return Books.findById(field.product_id);
+  return booksModel.findById(field.product_id);
 };
 bookModel.prototype.searchingBooks = async (findingQuery) => {
-  try {
-    console.log(findingQuery.findingQuery);
-    let result = await Books.find(findingQuery.findingQuery);
-    if (result.length > 0) {
-      logger.info(`books found ---> ${result}`);
-      return result;
-    } else {
-      logger.error(`No books found !`);
-      return result;
-    }
-  } catch (error) {
-    logger.error(error);
-
-    return error;
-  }
+  return booksModel.find(findingQuery.findingQuery);
 };
 
 bookModel.prototype.updateBook = (_id, req) => {
-  return Books.findByIdAndUpdate(_id, req, { useFindAndModify: false });
+  return booksModel.findByIdAndUpdate(_id, req, { useFindAndModify: false });
 };
 
 bookModel.prototype.deleteBook = (_id) => {
-  return Books.findByIdAndRemove(_id, { useFindAndModify: false });
+  return booksModel.findByIdAndRemove(_id, { useFindAndModify: false });
 };
 
 module.exports = new bookModel();

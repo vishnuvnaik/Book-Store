@@ -13,7 +13,7 @@ var orderDetailsSchema = new mongoSchema(
       required: true,
       ref: "users",
     },
-    
+
     quantity: {
       type: Number,
       required: true,
@@ -23,10 +23,10 @@ var orderDetailsSchema = new mongoSchema(
     timestamps: true,
   }
 );
-var OrderDetails = mongoose.model("OrderDetails", orderDetailsSchema);
+var orderDetails = mongoose.model("OrderDetails", orderDetailsSchema);
 function orderModel() {}
 orderModel.prototype.placeOrder = (req) => {
-  let orderPlace = new OrderDetails(req);
+  let orderPlace = new orderDetails(req);
   return orderPlace.save();
 };
 module.exports = new orderModel();
