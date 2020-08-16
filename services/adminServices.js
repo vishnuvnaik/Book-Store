@@ -159,8 +159,6 @@ module.exports = class AdminServices {
       };
       let searchQuery = { findingQuery };
       let searchResultArray = await bookModel.searchingBooks(searchQuery);
-      logger.info("Result of searching --> ", searchResultArray);
-
       if (searchResultArray.length > 0) {
         return {
           success: true,
