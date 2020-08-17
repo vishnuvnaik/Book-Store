@@ -2,12 +2,13 @@ const express = require("express");
 const adminController = require("../controller/adminController");
 const router = express.Router();
 const authenticate = require("../middleware/autheticate");
-
+const upload = require("../services/multer");
 // user routes
 router.get("/books", adminController.getBooks);
 router.post(
   "/books",
   authenticate.checkTokenAuth,
+  upload.single("image"),
   adminController.addBookController
 );
 router.put(
