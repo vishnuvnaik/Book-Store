@@ -4,6 +4,7 @@ const logger = require("../config/logger");
 const constantsParam = require("../constants/static");
 module.exports.addBookController = (req, res) => {
   let response = {};
+  var imageUrl = req.file.location;
   try {
     req
       .checkBody("authorName", "Author should not be empty")
@@ -35,6 +36,7 @@ module.exports.addBookController = (req, res) => {
         description: req.body.description,
         bookName: req.body.bookName,
         userId: req.decoded.payload.id,
+        imageUrl: imageUrl,
       };
 
       adminServices
@@ -62,6 +64,27 @@ module.exports.addBookController = (req, res) => {
     return res.status(500).send(response);
   }
 };
+module.exports.imageUpload = (req, res) => {
+  try {
+    var imageUrl = req.file.location;
+    var response = {};
+
+    adminServices
+      .imageUpload(req, imageUrl)
+      .then((data) => {
+        response.data = data;
+        response.sucess = true;
+        res.status(200).send(response);
+      })
+      .catch((err) => {
+        response.data = err;
+        response.sucess = false;
+        res.status(422).send(response);
+      });
+  } catch (err) {
+    this.errorHandling(err);
+  }
+};
 module.exports.getBooks = (req, res) => {
   let response = {};
   let find = {};
@@ -80,10 +103,10 @@ module.exports.getBooks = (req, res) => {
         response.message = "Book details retrieved";
         logger.info("books retreived");
         res
-        .status(
-          constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
-        )
-        .send({ data: response });
+          .status(
+            constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+          )
+          .send({ data: response });
       })
       .catch((err) => {
         console.log(err);
@@ -110,7 +133,12 @@ module.exports.updateBooks = (req, res) => {
       response.success = false;
       let data = { errors };
       response.data = data;
-      res.status(422).send(response);
+      res
+        .status(
+          constantsParam.staticHTTPErrorMessages.UNPROCESSABLE_ENTITY
+            .errorResponseMessage
+        )
+        .send({ data: response });
     } else {
       adminServices
         .updateBooks(req.params._id, req.body)
@@ -118,7 +146,11 @@ module.exports.updateBooks = (req, res) => {
           response.success = true;
           response.data = data;
           response.message = "Book Update Successfully";
-          res.status(200).send({ data: response });
+          res
+            .status(
+              constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+            )
+            .send({ data: response }); // OK
         })
         .catch((err) => {
           console.log(err);
@@ -145,7 +177,11 @@ module.exports.deleteBook = (req, res) => {
         response.data = data;
         console.log(response);
         response.message = "Book Deleted Successfully";
-        res.status(200).send({ data: response });
+        res
+          .status(
+            constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+          )
+          .send({ data: response });
       }
     })
     .catch((err) => {
@@ -166,7 +202,11 @@ module.exports.searchingBooks = async (req, res) => {
     } else {
       let result = await adminServices.searchingBooks(req.body);
       if (result.success) {
-        res.status(200).send(result); // OK
+        res
+          .status(
+            constantsParam.staticHTTPSuccessMessages.OK.successResponseCode
+          )
+          .send({ data: response }); // OK
       } else {
         res.status(404).send(result); // NOT FOUND
       }
