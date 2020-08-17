@@ -32,6 +32,9 @@ var adminSchema = new mongoSchema(
       required: [true, "price is required"],
       validate: /^[0-9]*$/,
     },
+    imageUrl: {
+      type: String,
+    },
   },
   {
     timestamps: true,
