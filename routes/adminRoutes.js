@@ -2,7 +2,7 @@ const express = require("express");
 const adminController = require("../controller/adminController");
 const router = express.Router();
 const authenticate = require("../middleware/autheticate");
-const upload = require("../services/multer");
+const upload = require("../services/s3");
 // user routes
 router.get("/books", adminController.getBooks);
 router.post(
